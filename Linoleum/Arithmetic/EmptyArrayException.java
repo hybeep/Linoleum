@@ -1,4 +1,4 @@
-package Algebra;
+package Arithmetic;
 
 public class EmptyArrayException extends RuntimeException {
     

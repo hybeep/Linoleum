@@ -10,7 +10,7 @@ public class Q extends DivisionRingNumber {
 
     public Q() {
 
-        this.TYPE = "RATIONAL";
+        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
         this.A = zero;
         this.B = one;
         this.C = 1;
@@ -20,7 +20,7 @@ public class Q extends DivisionRingNumber {
 
     public Q(Long P, Long Q) {
 
-        this.TYPE = "RATIONAL";
+        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
         this.C = 1;
 
         if (Long.compare(Q, zero) == 0)
@@ -53,7 +53,7 @@ public class Q extends DivisionRingNumber {
 
     public Q(Q r) {
 
-        this.TYPE = "RATIONAL";
+        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
         this.A = r.A.longValue();
         this.B = r.B.longValue();
         this.C = 1;
@@ -63,7 +63,7 @@ public class Q extends DivisionRingNumber {
 
     public Q(Z n) {
 
-        this.TYPE = "RATIONAL";
+        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
         this.A = n.A.longValue();
         this.B = one;
         this.C = 1;
@@ -75,7 +75,7 @@ public class Q extends DivisionRingNumber {
        
         Q i = new Q(k.A.longValue(), k.B.longValue());
         
-        this.TYPE = "INTEGER";
+        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
         this.A = i.A.longValue();
         this.B = i.B.longValue();
         this.C = 1;
@@ -86,7 +86,7 @@ public class Q extends DivisionRingNumber {
     @Override
     public Q zero() {
         
-        return new Q();
+        return new Q(zero, one);
 
     }
 
@@ -100,17 +100,31 @@ public class Q extends DivisionRingNumber {
 
 
     @Override
-    public Q plus(RingNumber r) {
-
+    public RingNumber plus(RingNumber r) {
+        
         Long rA = r.A.longValue();
         Long rB = r.B.longValue();
 
-        if (r.TYPE == TYPE)
-            return new Q(A.longValue() * rB + B.longValue() * rA, B.longValue() * rB);
-        else if (r.TYPE == "INTEGER")
-            return new Q(A.longValue() + B.longValue() * rA, B.longValue());
+        Long _A = A.longValue();
+        Long _B = B.longValue();
 
-        throw new IncompatibleTypesException();
+        switch (r.TYPE) {
+
+            case RingNumber.TYPE_CODE.INTEGER:
+                return new Q(_A + _B * rA, _B);
+
+            case RingNumber.TYPE_CODE.RATIONAL:
+                return new Q(_A * rB + _B * rA, _B * rB);
+
+            case RingNumber.TYPE_CODE.REAL:
+            case RingNumber.TYPE_CODE.COMPLEX:
+                return r.plus(this);
+
+            default:
+                throw new IncompatibleTypesException();
+
+        }
+
     }
 
 
@@ -123,17 +137,24 @@ public class Q extends DivisionRingNumber {
 
 
     @Override
-    public Q times(RingNumber r) {
+    public RingNumber times(RingNumber r) {
 
-        Long rA = r.A.longValue();
-        Long rB = r.B.longValue();
+        switch (r.TYPE) {
 
-        if (r.TYPE == TYPE)
-            return new Q(A.longValue() * rA, B.longValue() * rB);
-        else if (r.TYPE == "INTEGER")
-            return new Q(A.longValue() * rA, B.longValue());
+            case RingNumber.TYPE_CODE.INTEGER:
+                return new Q(A.longValue() * r.A.longValue(), B.longValue());
+                
+            case RingNumber.TYPE_CODE.RATIONAL:
+                return new Q(A.longValue() * r.A.longValue(), B.longValue() * r.B.longValue());
 
-        throw new IncompatibleTypesException();
+            case RingNumber.TYPE_CODE.REAL:
+            case RingNumber.TYPE_CODE.COMPLEX:
+                return r.times(this);
+
+            default:
+                throw new IncompatibleTypesException();
+
+        }
 
     }
 

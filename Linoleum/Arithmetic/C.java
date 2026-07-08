@@ -12,7 +12,7 @@ public class C extends DivisionRingNumber {
 
     public C() {
 
-        this.TYPE = "COMPLEX";
+        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
         this.A = zero;
         this.B = zero;
         this.C = 0;
@@ -22,7 +22,7 @@ public class C extends DivisionRingNumber {
     
     public C(Double A, Double B, int form) {
 
-        this.TYPE = "COMPLEX";
+        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
         this.C = form;
         this.A = A;
         this.B = B;
@@ -40,6 +40,8 @@ public class C extends DivisionRingNumber {
 
             }
 
+            this.C = 1;
+
         }
 
     }
@@ -47,10 +49,10 @@ public class C extends DivisionRingNumber {
 
     public C(C z) {
 
-        this.TYPE = "COMPLEX";
-        this.C = z.C;
-        this.A = z.A;
-        this.B = z.B;
+        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
+        this.C = z.C.intValue();
+        this.A = z.A.doubleValue();
+        this.B = z.B.doubleValue();
 
     }
 
@@ -85,7 +87,7 @@ public class C extends DivisionRingNumber {
 
     public C(R r) {
 
-        this.TYPE = "COMPLEX";
+        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
         this.A = r.A.doubleValue();
         this.B = 0D;
         this.C = 0;
@@ -95,7 +97,7 @@ public class C extends DivisionRingNumber {
 
     public C(Q r) {
 
-        this.TYPE = "COMPLEX";
+        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
         this.A = r.A.doubleValue() / r.B.doubleValue();
         this.B = 0D;
         this.C = 0;
@@ -105,7 +107,7 @@ public class C extends DivisionRingNumber {
 
     public C(Z n) {
 
-        this.TYPE = "COMPLEX";
+        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
         this.A = n.A.doubleValue();
         this.B = 0D;
         this.C = 0;
@@ -115,7 +117,7 @@ public class C extends DivisionRingNumber {
 
     public C(RingNumber k) {
 
-        this.TYPE = "COMPLEX";
+        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
         this.A = k.A.doubleValue();
         this.B = k.B.doubleValue();
         this.C = k.C.intValue();
@@ -126,7 +128,7 @@ public class C extends DivisionRingNumber {
     @Override
     public C zero() {
         
-        return new C();
+        return new C(zero, zero, 0);
 
     }
 
@@ -140,38 +142,33 @@ public class C extends DivisionRingNumber {
 
 
     @Override
-    public C plus(RingNumber w) {
+    public RingNumber plus(RingNumber w) {
 
         C zPair = new C(this, 0);
-        
-        if (w.TYPE == "COMPLEX") {
-            
-            C wComplex = new C(w);
-            C wPair = new C(wComplex, 0);
 
-            C sum = new C(zPair.A.doubleValue() + wPair.A.doubleValue(), zPair.B.doubleValue() + wPair.B.doubleValue(), 0);
+        C sum;
+        switch (w.TYPE) {
 
-            return new C(sum, C.intValue());
+            case RingNumber.TYPE_CODE.INTEGER:
+            case RingNumber.TYPE_CODE.REAL:
+                sum = new C(w.A.doubleValue() + zPair.A.doubleValue(), zPair.B.doubleValue(), 0);
+                return new C(sum, C.intValue());
 
-        } else if (w.TYPE == "REAL") {
+            case RingNumber.TYPE_CODE.RATIONAL:
+                sum = new C(w.A.doubleValue() / w.B.doubleValue() + zPair.A.doubleValue(), zPair.B.doubleValue(), 0);
+                return new C(sum, C.intValue());
 
-            C sum = new C(zPair.A.doubleValue() + w.A.doubleValue(), zPair.B.doubleValue(), 0);
-            return new C(sum, C.intValue());
+            case RingNumber.TYPE_CODE.COMPLEX:
+                C wComplex = new C(w);
+                C wPair = new C(wComplex, 0);
+                sum = new C(zPair.A.doubleValue() + wPair.A.doubleValue(), zPair.B.doubleValue() + wPair.B.doubleValue(), 0);
+                return new C(sum, C.intValue());
 
-        } else if (w.TYPE == "RATIONAL") {
-
-            C sum = new C(zPair.A.doubleValue() + w.A.doubleValue() / w.B.doubleValue(), zPair.B.doubleValue(), 0);
-            return new C(sum, C.intValue());
-
-        } else if (w.TYPE == "INTEGER") {
-
-            C sum = new C(zPair.A.doubleValue() + w.A.doubleValue(), zPair.B.doubleValue(), 0);
-            return new C(sum, C.intValue());
+            default:
+                throw new IncompatibleTypesException();
 
         }
-
-        throw new IncompatibleTypesException();
-
+        
     }
 
 
@@ -179,24 +176,39 @@ public class C extends DivisionRingNumber {
     public C negative() {
 
         return (C.intValue() == 0) ?
-                    new C(-A.doubleValue(), -B.doubleValue(), C.intValue())
+                    new C(-A.doubleValue(), -B.doubleValue(), 0)
                 : 
-                    new C(A.doubleValue(), B.doubleValue() + Math.PI, C.intValue());
+                    new C(A.doubleValue(), B.doubleValue() + Math.PI, 1);
 
     }
 
 
     @Override
-    public C times(RingNumber w) {
+    public RingNumber times(RingNumber w) {
 
-        C wComplex = new C(w);
+        C zPolar = new C(this, 0);
 
-        C zPolar = new C(this, 1);
-        C wPolar = new C(wComplex, 1);
+        C prod;
+        switch (w.TYPE) {
 
-        C prod = new C(zPolar.A.doubleValue() * wPolar.A.doubleValue(), zPolar.B.doubleValue() + wPolar.B.doubleValue(), 1);
+            case RingNumber.TYPE_CODE.INTEGER:
+            case RingNumber.TYPE_CODE.REAL:
+                prod = new C(w.A.doubleValue() * zPolar.A.doubleValue(), zPolar.B.doubleValue(), 1);
+                return new C(prod, C.intValue());
 
-        return new C(prod, C.intValue());
+            case RingNumber.TYPE_CODE.RATIONAL:
+                prod = new C(zPolar.A.doubleValue() * w.A.doubleValue() / w.B.doubleValue(), zPolar.B.doubleValue(), 1);
+                return new C(prod, C.intValue());
+                
+            case RingNumber.TYPE_CODE.COMPLEX:
+                C wPolar = new C(new C(w), 1);
+                prod = new C(zPolar.A.doubleValue() * wPolar.A.doubleValue(), zPolar.B.doubleValue() + wPolar.B.doubleValue(), 1);
+                return new C(prod, C.intValue());
+
+            default:
+                throw new IncompatibleTypesException();
+
+        }
 
     }
 
@@ -212,10 +224,10 @@ public class C extends DivisionRingNumber {
     @Override
     public C inverse() {
 
-        C zPolar = new C(this, 1);
-
         if (isZero())
             throw new DivideByZeroException();
+        
+        C zPolar = new C(this, 1);
 
         C invZ = new C(1 / zPolar.A.doubleValue(), -zPolar.B.doubleValue(), 1);
         

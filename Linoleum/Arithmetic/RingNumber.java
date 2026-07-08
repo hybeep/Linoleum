@@ -1,13 +1,27 @@
 package Arithmetic;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
 public abstract class RingNumber {
 
-    String TYPE;
+
+    TYPE_CODE TYPE;
 
     Number A, B, C;
+
+
+    public static enum TYPE_CODE {
+
+        INTEGER,
+        MODN,
+        RATIONAL,
+        REAL,
+        COMPLEX
+
+    }
 
 
     abstract public RingNumber zero();
@@ -27,6 +41,7 @@ public abstract class RingNumber {
     
 
     abstract public RingNumber times(RingNumber m);
+
 
     public RingNumber times(Long n) {
 
@@ -143,7 +158,7 @@ public abstract class RingNumber {
     }
 
 
-    final public String getType() {
+    final public TYPE_CODE getType() {
 
         return TYPE;
 

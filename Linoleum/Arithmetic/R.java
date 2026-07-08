@@ -10,7 +10,7 @@ public class R extends DivisionRingNumber {
 
     public R() {
 
-        this.TYPE = "REAL";
+        this.TYPE = RingNumber.TYPE_CODE.REAL;
         this.A = zero;
         this.B = 1;
         this.C = 0;
@@ -18,10 +18,10 @@ public class R extends DivisionRingNumber {
     }
 
 
-    public R(Double R) {
+    public R(Double r) {
 
-        this.TYPE = "REAL";
-        this.A = R;
+        this.TYPE = RingNumber.TYPE_CODE.REAL;
+        this.A = r;
         this.B = 1;
         this.C = 0;
 
@@ -30,7 +30,7 @@ public class R extends DivisionRingNumber {
 
     public R(R s) {
 
-        this.TYPE = "REAL";
+        this.TYPE = RingNumber.TYPE_CODE.REAL;
         this.A = s.A.doubleValue();
         this.B = 1;
         this.C = 0;
@@ -40,7 +40,7 @@ public class R extends DivisionRingNumber {
 
     public R(Q s) {
 
-        this.TYPE = "REAL";
+        this.TYPE = RingNumber.TYPE_CODE.REAL;
         this.A = s.A.doubleValue() / s.B.doubleValue();
         this.B = 1;
         this.C = 0;
@@ -50,7 +50,7 @@ public class R extends DivisionRingNumber {
 
     public R(Z n) {
 
-        this.TYPE = "REAL";
+        this.TYPE = RingNumber.TYPE_CODE.REAL;
         this.A = n.A.doubleValue();
         this.B = 1;
         this.C = 0;
@@ -60,7 +60,7 @@ public class R extends DivisionRingNumber {
 
     public R(RingNumber k) {
 
-        this.TYPE = "REAL";
+        this.TYPE = RingNumber.TYPE_CODE.REAL;
         this.A = k.A.doubleValue();
         this.B = 1;
         this.C = 0;
@@ -71,7 +71,7 @@ public class R extends DivisionRingNumber {
     @Override
     public R zero() {
         
-        return new R();
+        return new R(zero);
 
     }
 
@@ -85,19 +85,31 @@ public class R extends DivisionRingNumber {
 
 
     @Override
-    public R plus(RingNumber s) {
+    public RingNumber plus(RingNumber s) {
 
         Double sA = s.A.doubleValue();
         Double sB = s.B.doubleValue();
 
-        if (s.TYPE == TYPE)
-            return new R(A.doubleValue() + sA);
-        else if (s.TYPE == "RATIONAL")
-            return new R(A.doubleValue() + sA / sB);
-        else if (s.TYPE == "INTEGER")
-            return new R(A.doubleValue() + sA);
+        Double _A = A.doubleValue();
 
-        throw new IncompatibleTypesException();
+        switch (s.TYPE) {
+
+            case RingNumber.TYPE_CODE.INTEGER:
+                return new R(_A + sA);
+
+            case RingNumber.TYPE_CODE.RATIONAL:
+                return new R(sA / sB + _A);
+
+            case RingNumber.TYPE_CODE.REAL:
+                return new R(sA + _A);
+
+            case RingNumber.TYPE_CODE.COMPLEX:
+                return s.plus(this);
+
+            default:
+                throw new IncompatibleTypesException();
+
+        }
 
     }
 
@@ -111,19 +123,31 @@ public class R extends DivisionRingNumber {
 
 
     @Override
-    public R times(RingNumber s) {
+    public RingNumber times(RingNumber s) {
 
         Double sA = s.A.doubleValue();
-        Double sB = s.B.doubleValue(); 
+        Double sB = s.B.doubleValue();
 
-        if (s.TYPE == TYPE)
-            return new R(A.doubleValue() * sA);
-        else if (s.TYPE == "RATIONAL")
-            return new R(A.doubleValue() * sA / sB);
-        else if (s.TYPE == "INTEGER")
-            return new R(A.doubleValue() * sA);
+        Double _A = A.doubleValue();
 
-        throw new IncompatibleTypesException();
+        switch (s.TYPE) {
+
+            case RingNumber.TYPE_CODE.INTEGER:
+                return new R(_A * sA);
+
+            case RingNumber.TYPE_CODE.RATIONAL:
+                return new R(_A * sA / sB);
+
+            case RingNumber.TYPE_CODE.REAL:
+                return new R(_A * sA);
+
+            case RingNumber.TYPE_CODE.COMPLEX:
+                return s.times(this);
+
+            default:
+                throw new IncompatibleTypesException();
+
+        }
         
     }
 

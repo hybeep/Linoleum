@@ -10,7 +10,7 @@ public class Zn extends RingIdentityNumber {
 
     public Zn(Long Z, Long N) {
 
-        this.TYPE = "MODN";
+        this.TYPE = RingNumber.TYPE_CODE.MODN;
         this.A = Z;
         this.B = N;
         this.C = 0;
@@ -21,9 +21,9 @@ public class Zn extends RingIdentityNumber {
 
     public Zn(Zn c) {
 
-        this.TYPE = "MODN";
-        this.A = c.A;
-        this.B = c.B;
+        this.TYPE = RingNumber.TYPE_CODE.MODN;
+        this.A = c.A.longValue();
+        this.B = c.B.longValue();
 
     }
 
@@ -33,7 +33,7 @@ public class Zn extends RingIdentityNumber {
         while(A.longValue() < zero)
             A = A.longValue() + B.longValue();
 
-        while(A.longValue() <= B.longValue())
+        while(B.longValue() <= A.longValue())
             A = A.longValue() - B.longValue();
 
     }

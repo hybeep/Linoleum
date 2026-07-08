@@ -14,7 +14,7 @@ public abstract class DivisionRingNumber extends RingIdentityNumber {
     }
 
 
-    public static RingNumber div(DivisionRingNumber a, DivisionRingNumber b) {
+    public static RingNumber div(RingNumber a, DivisionRingNumber b) {
 
         return a.times(b.inverse());
 

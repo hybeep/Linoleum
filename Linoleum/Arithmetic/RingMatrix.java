@@ -1,8 +1,4 @@
-package Algebra;
-
-import Arithmetic.IncompatibleTypesException;
-import Arithmetic.RingNumber;
-
+package Arithmetic;
 
 import java.util.ArrayList;
 import java.util.Iterator;

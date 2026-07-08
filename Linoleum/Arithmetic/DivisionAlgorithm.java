@@ -9,6 +9,7 @@ public class DivisionAlgorithm {
   	private Long sgn_a, sgn_b;
 	private Long A, B;
 	private Long C, Q, R;
+	
 	private final Long ZERO = 0L;
 	private final Long ONE = 1L;
 	// A * C = B * Q + R , initially C = 1

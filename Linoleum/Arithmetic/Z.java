@@ -4,10 +4,15 @@ package Arithmetic;
 public class Z extends RingIdentityNumber {
 
 
+    private final Long zero = 0L;
+    private final Long one = 1L;
+    
+
+
     public Z() {
 
-        this.TYPE = "INTEGER";
-        this.A = 0L;
+        this.TYPE = RingNumber.TYPE_CODE.INTEGER;
+        this.A = zero;
         this.B = 1;
         this.C = 0;
 
@@ -16,7 +21,7 @@ public class Z extends RingIdentityNumber {
 
     public Z(Long A) {
 
-        this.TYPE = "INTEGER";
+        this.TYPE = RingNumber.TYPE_CODE.INTEGER;
         this.A = A;
         this.B = 1;
         this.C = 0;
@@ -26,7 +31,7 @@ public class Z extends RingIdentityNumber {
 
     public Z(Z m) {
 
-        this.TYPE = "INTEGER";
+        this.TYPE = RingNumber.TYPE_CODE.INTEGER;
         this.A = m.A.longValue();
         this.B = 1;
         this.C = 0;
@@ -36,7 +41,7 @@ public class Z extends RingIdentityNumber {
 
     public Z(RingNumber k) {
 
-        this.TYPE = "INTEGER";
+        this.TYPE = RingNumber.TYPE_CODE.INTEGER;
         this.A = k.A.longValue();
         this.B = 1;
         this.C = 0;
@@ -47,25 +52,36 @@ public class Z extends RingIdentityNumber {
     @Override
     public Z zero() {
         
-        return new Z();
+        return new Z(zero);
 
     }
 
     @Override
     public Z identity() {
 
-        return new Z(1L);
+        return new Z(one);
 
     }
 
 
     @Override
-    public Z plus(RingNumber m) {
+    public RingNumber plus(RingNumber m) {
 
-        if (m.TYPE == TYPE)
-            return new Z(A.longValue() + m.A.longValue());
+        switch (m.TYPE) {
 
-        throw new IncompatibleTypesException();
+            case RingNumber.TYPE_CODE.INTEGER:
+                return new Z(A.longValue() + m.A.longValue());
+            
+            case RingNumber.TYPE_CODE.RATIONAL:
+            case RingNumber.TYPE_CODE.REAL:
+            case RingNumber.TYPE_CODE.COMPLEX:
+                return m.plus(this);
+
+            default:
+                throw new IncompatibleTypesException();
+
+        }
+
 
     }
 
@@ -79,12 +95,22 @@ public class Z extends RingIdentityNumber {
 
 
     @Override
-    public Z times(RingNumber m) {
+    public RingNumber times(RingNumber m) {
 
-        if (m.TYPE == TYPE)
-            return new Z(A.longValue() * m.A.longValue());
+        switch (m.TYPE) {
 
-        throw new IncompatibleTypesException();
+            case RingNumber.TYPE_CODE.INTEGER:
+                return new Z(A.longValue() * m.A.longValue());
+
+            case RingNumber.TYPE_CODE.RATIONAL:
+            case RingNumber.TYPE_CODE.REAL:
+            case RingNumber.TYPE_CODE.COMPLEX:
+                return m.times(this);
+
+            default:
+                throw new IncompatibleTypesException();
+
+        }
 
     }
 
@@ -92,7 +118,7 @@ public class Z extends RingIdentityNumber {
     @Override
     public boolean isZero() {
 
-        return Long.compare(A.longValue(), 0L) == 0;
+        return Long.compare(A.longValue(), zero) == 0;
 
     }
 
