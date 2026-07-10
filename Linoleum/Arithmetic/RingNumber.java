@@ -29,7 +29,7 @@ public abstract class RingNumber extends GroupNumber {
     
 
     @Override
-    public RingNumber times(Long n) {
+    public RingNumber times(int n) {
 
         RingNumber bs;
 

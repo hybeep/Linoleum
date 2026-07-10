@@ -18,8 +18,7 @@ public abstract class GroupNumber {
         MODN,
         RATIONAL,
         REAL,
-        COMPLEX,
-        DIRECTSUM
+        COMPLEX
 
     }
 
@@ -40,7 +39,7 @@ public abstract class GroupNumber {
     }
 
 
-    public GroupNumber times(Long n) {
+    public GroupNumber times(int n) {
 
         GroupNumber bs;
 
@@ -106,6 +105,41 @@ public abstract class GroupNumber {
     final public void print() {
 
         System.out.println(format());
+
+    }
+
+
+    final public Z asZ() {
+
+        return new Z(this);
+
+    }
+
+
+    final public Q asQ() {
+
+        return new Q(this);
+
+    }
+
+
+    final public R asR() {
+
+        return new R(this);
+
+    }
+
+
+    final public C asC() {
+
+        return new C(this);
+
+    }
+
+
+    final public Zn asZn() {
+
+        return new Zn(this);
 
     }
 

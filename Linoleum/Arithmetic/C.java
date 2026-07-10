@@ -143,7 +143,7 @@ public class C extends DivisionRingNumber {
 
 
     @Override
-    public DivisionRingNumber plus(GroupNumber w) {
+    public C plus(GroupNumber w) {
 
         C zPair = new C(this, 0);
 
@@ -185,7 +185,7 @@ public class C extends DivisionRingNumber {
 
 
     @Override
-    public DivisionRingNumber times(RingNumber w) {
+    public C times(RingNumber w) {
 
         C zPolar = new C(this, 0);
 

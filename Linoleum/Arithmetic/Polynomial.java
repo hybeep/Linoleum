@@ -1,42 +1,39 @@
 package Arithmetic;
 
 
+import Arithmetic.GroupNumber.TYPE;
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
 
-public class Polynomial {
+public class Polynomial<T extends RingNumber> {
 
 
-    private String TYPE;
     private ArrayList<RingNumber> coefficients;
     private int degree;
 
 
-    public Polynomial(ArrayList<RingNumber> coefficients) {
+    public Polynomial(ArrayList<T> coefficients) {
 
         if (coefficients.size() == 0)
             throw new EmptyArrayException();
 
 
-        this.TYPE = coefficients.get(0).getType();
-
         Collections.reverse(coefficients);
 
-        Iterator<RingNumber> it = coefficients.iterator();
+        Iterator<T> it = coefficients.iterator();
 
         ArrayList<RingNumber> polRev = new ArrayList<>();
 
         boolean s = true;
-        RingNumber next;
+        T next;
 
         while(it.hasNext()) {
 
             next = it.next();
-
-            if (next.getType() != TYPE)
-                throw new IncompatibleTypesException();
 
             if (s) {
 
@@ -67,9 +64,8 @@ public class Polynomial {
     }
 
 
-    public Polynomial(Polynomial polynomial) {
+    public Polynomial(Polynomial<T> polynomial) {
 
-        this.TYPE = polynomial.TYPE;
         this.coefficients = new ArrayList<>();
         for (RingNumber num : polynomial.coefficients)
             this.coefficients.add(num);
@@ -79,11 +75,11 @@ public class Polynomial {
     }
 
 
-    public Polynomial negative() {
+    public Polynomial<T> negative() {
 
-        ArrayList<RingNumber> neg = new ArrayList<>();
+        ArrayList<T> neg = new ArrayList<>();
 
-        for (RingNumber num : coefficients)
+        for (T num : coefficients)
             neg.add(num.negative());
 
         return new Polynomial(neg);

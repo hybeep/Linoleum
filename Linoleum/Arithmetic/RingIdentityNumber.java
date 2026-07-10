@@ -25,7 +25,7 @@ public abstract class RingIdentityNumber extends RingNumber {
     
 
     @Override
-    public RingIdentityNumber times(Long n) {
+    public RingIdentityNumber times(int n) {
 
         RingIdentityNumber bs;
 

@@ -4,12 +4,12 @@ package Arithmetic;
 import java.util.ArrayList;
 
 
-import Arithmetic.RingNumber.TYPE_CODE;
+import Arithmetic.GroupNumber.TYPE;
 
 
 public abstract class ModuleNumber {
 
-    TYPE_CODE TYPE;
+    TYPE type;
     MOD_TYPE MOD_TYPE;
 
     Number A, B, C;

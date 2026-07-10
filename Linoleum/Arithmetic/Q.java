@@ -101,24 +101,23 @@ public class Q extends DivisionRingNumber {
 
     @Override
     public DivisionRingNumber plus(GroupNumber r) {
-        
-        Long rA = r.A.longValue();
-        Long rB = r.B.longValue();
-
-        Long _A = A.longValue();
-        Long _B = B.longValue();
 
         switch (r.type) {
 
             case GroupNumber.TYPE.INTEGER:
-                return new Q(_A + _B * rA, _B);
+                return new Q(A.longValue() + B.longValue() * r.A.longValue(), B.longValue());
 
             case GroupNumber.TYPE.RATIONAL:
-                return new Q(_A * rB + _B * rA, _B * rB);
+                return new Q(A.longValue() * r.B.longValue() + B.longValue() * r.A.longValue(), B.longValue() * r.B.longValue());
 
             case GroupNumber.TYPE.REAL:
+                return new R(r.A.doubleValue() + A.doubleValue() / B.doubleValue());
+
             case GroupNumber.TYPE.COMPLEX:
-                return r.plus(this);
+                C rComplex = new C(r);
+                C rPair = new C(rComplex, 0);
+                C sum = new C(rPair.A.doubleValue() + A.doubleValue() / B.doubleValue(), rPair.B.doubleValue(), 0);
+                return new C(sum, rComplex.C.intValue());
 
             default:
                 throw new IncompatibleTypesException();
@@ -148,8 +147,13 @@ public class Q extends DivisionRingNumber {
                 return new Q(A.longValue() * r.A.longValue(), B.longValue() * r.B.longValue());
 
             case GroupNumber.TYPE.REAL:
+                return new R(r.A.doubleValue() * A.doubleValue() / B.doubleValue());
+
             case GroupNumber.TYPE.COMPLEX:
-                return r.times(this);
+                C rComplex = new C(r);
+                C rPolar = new C(rComplex, 1);
+                C prod = new C(rPolar.A.doubleValue() * A.doubleValue() / B.doubleValue(), rPolar.B.doubleValue(), 1);
+                return new C(prod, rComplex.C.intValue());
 
             default:
                 throw new IncompatibleTypesException();

@@ -10,9 +10,9 @@ public class Zn extends RingIdentityNumber {
 
     public Zn(Long Z, Long N) {
 
-        this.TYPE = RingNumber.TYPE_CODE.MODN;
+        this.type = GroupNumber.TYPE.MODN;
         this.A = Z;
-        this.B = N;
+        this.B = N >= 0L ? N : -N;
         this.C = 0;
         reduce();
 
@@ -21,9 +21,24 @@ public class Zn extends RingIdentityNumber {
 
     public Zn(Zn c) {
 
-        this.TYPE = RingNumber.TYPE_CODE.MODN;
+        this.type = GroupNumber.TYPE.MODN;
         this.A = c.A.longValue();
         this.B = c.B.longValue();
+        this.C = 0;
+
+    }
+
+
+    public Zn(GroupNumber a) {
+
+        this.type = GroupNumber.TYPE.MODN;
+        
+        Zn aZn = new Zn(a.A.longValue(), a.B.longValue());
+
+        this.A = aZn.A.longValue();
+        this.B = aZn.B.longValue();
+        this.C = 0;
+
 
     }
 
@@ -56,9 +71,9 @@ public class Zn extends RingIdentityNumber {
 
 
     @Override
-    public Zn plus(RingNumber c) {
+    public Zn plus(GroupNumber c) {
 
-        if (c.TYPE != TYPE || Long.compare(c.B.longValue(), B.longValue()) != 0)
+        if (c.type != type || Long.compare(c.B.longValue(), B.longValue()) != 0)
             throw new IncompatibleTypesException();
         
         return new Zn(A.longValue() + c.A.longValue(), B.longValue());
@@ -77,7 +92,7 @@ public class Zn extends RingIdentityNumber {
     @Override
     public Zn times(RingNumber c) {
 
-        if (c.TYPE != TYPE || Long.compare(c.B.longValue(), B.longValue()) != 0)
+        if (c.type != type || Long.compare(c.B.longValue(), B.longValue()) != 0)
             throw new IncompatibleTypesException();
         
         return new Zn(A.longValue() * c.A.longValue(), B.longValue());

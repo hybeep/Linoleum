@@ -65,17 +65,12 @@ public class Z extends RingIdentityNumber {
 
 
     @Override
-    public RingIdentityNumber plus(GroupNumber m) {
+    public Z plus(GroupNumber m) {
 
         switch (m.type) {
 
             case GroupNumber.TYPE.INTEGER:
                 return new Z(A.longValue() + m.A.longValue());
-            
-            case GroupNumber.TYPE.RATIONAL:
-            case GroupNumber.TYPE.REAL:
-            case GroupNumber.TYPE.COMPLEX:
-                return m.plus(this);
 
             default:
                 throw new IncompatibleTypesException();
@@ -95,17 +90,12 @@ public class Z extends RingIdentityNumber {
 
 
     @Override
-    public RingIdentityNumber times(RingNumber m) {
+    public Z times(RingNumber m) {
 
         switch (m.type) {
 
             case GroupNumber.TYPE.INTEGER:
                 return new Z(A.longValue() * m.A.longValue());
-
-            case GroupNumber.TYPE.RATIONAL:
-            case GroupNumber.TYPE.REAL:
-            case GroupNumber.TYPE.COMPLEX:
-                return m.times(this);
 
             default:
                 throw new IncompatibleTypesException();

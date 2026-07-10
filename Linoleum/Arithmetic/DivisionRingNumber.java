@@ -25,7 +25,7 @@ public abstract class DivisionRingNumber extends RingIdentityNumber {
     
 
     @Override
-    final public DivisionRingNumber times(Long n) {
+    final public DivisionRingNumber times(int n) {
 
         DivisionRingNumber bs;
 
@@ -73,7 +73,7 @@ public abstract class DivisionRingNumber extends RingIdentityNumber {
     }
 
 
-    final public DivisionRingNumber pow(Long n) {
+    final public DivisionRingNumber pow(int n) {
 
         
         DivisionRingNumber bs;

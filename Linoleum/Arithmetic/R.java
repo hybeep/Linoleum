@@ -87,24 +87,23 @@ public class R extends DivisionRingNumber {
     @Override
     public DivisionRingNumber plus(GroupNumber s) {
 
-        Double sA = s.A.doubleValue();
-        Double sB = s.B.doubleValue();
-
-        Double _A = A.doubleValue();
 
         switch (s.type) {
 
             case GroupNumber.TYPE.INTEGER:
-                return new R(_A + sA);
+                return new R(A.doubleValue() + s.A.doubleValue());
 
             case GroupNumber.TYPE.RATIONAL:
-                return new R(sA / sB + _A);
+                return new R(s.A.doubleValue() / s.B.doubleValue() + A.doubleValue());
 
             case GroupNumber.TYPE.REAL:
-                return new R(sA + _A);
+                return new R(s.A.doubleValue() + A.doubleValue());
 
             case GroupNumber.TYPE.COMPLEX:
-                return s.plus(this);
+                C sComplex = new C(s);
+                C sPair = new C(sComplex, 0);
+                C sum = new C(sPair.A.doubleValue() + A.doubleValue(), sPair.B.doubleValue(), 0);
+                return new C(sum, sComplex.C.intValue());
 
             default:
                 throw new IncompatibleTypesException();
@@ -125,24 +124,22 @@ public class R extends DivisionRingNumber {
     @Override
     public DivisionRingNumber times(RingNumber s) {
 
-        Double sA = s.A.doubleValue();
-        Double sB = s.B.doubleValue();
-
-        Double _A = A.doubleValue();
-
         switch (s.type) {
 
             case GroupNumber.TYPE.INTEGER:
-                return new R(_A * sA);
+                return new R(A.doubleValue() * s.A.doubleValue());
 
             case GroupNumber.TYPE.RATIONAL:
-                return new R(_A * sA / sB);
+                return new R(A.doubleValue() * s.A.doubleValue() / s.B.doubleValue());
 
             case GroupNumber.TYPE.REAL:
-                return new R(_A * sA);
+                return new R(A.doubleValue() * s.A.doubleValue());
 
             case GroupNumber.TYPE.COMPLEX:
-                return s.times(this);
+                C sComplex = new C(s);
+                C sPolar = new C(sComplex, 1);
+                C prod = new C(sPolar.A.doubleValue() * A.doubleValue(), sPolar.B.doubleValue(), 1);
+                return new C(prod, sComplex.C.intValue());
 
             default:
                 throw new IncompatibleTypesException();
