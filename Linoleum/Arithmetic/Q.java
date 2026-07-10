@@ -10,7 +10,7 @@ public class Q extends DivisionRingNumber {
 
     public Q() {
 
-        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
+        this.type = GroupNumber.TYPE.RATIONAL;
         this.A = zero;
         this.B = one;
         this.C = 1;
@@ -20,7 +20,7 @@ public class Q extends DivisionRingNumber {
 
     public Q(Long P, Long Q) {
 
-        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
+        this.type = GroupNumber.TYPE.RATIONAL;
         this.C = 1;
 
         if (Long.compare(Q, zero) == 0)
@@ -53,7 +53,7 @@ public class Q extends DivisionRingNumber {
 
     public Q(Q r) {
 
-        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
+        this.type = GroupNumber.TYPE.RATIONAL;
         this.A = r.A.longValue();
         this.B = r.B.longValue();
         this.C = 1;
@@ -63,7 +63,7 @@ public class Q extends DivisionRingNumber {
 
     public Q(Z n) {
 
-        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
+        this.type = GroupNumber.TYPE.RATIONAL;
         this.A = n.A.longValue();
         this.B = one;
         this.C = 1;
@@ -71,11 +71,11 @@ public class Q extends DivisionRingNumber {
     }
 
 
-    public Q(RingNumber k) {
+    public Q(GroupNumber k) {
        
         Q i = new Q(k.A.longValue(), k.B.longValue());
         
-        this.TYPE = RingNumber.TYPE_CODE.RATIONAL;
+        this.type = GroupNumber.TYPE.RATIONAL;
         this.A = i.A.longValue();
         this.B = i.B.longValue();
         this.C = 1;
@@ -100,7 +100,7 @@ public class Q extends DivisionRingNumber {
 
 
     @Override
-    public RingNumber plus(RingNumber r) {
+    public DivisionRingNumber plus(GroupNumber r) {
         
         Long rA = r.A.longValue();
         Long rB = r.B.longValue();
@@ -108,16 +108,16 @@ public class Q extends DivisionRingNumber {
         Long _A = A.longValue();
         Long _B = B.longValue();
 
-        switch (r.TYPE) {
+        switch (r.type) {
 
-            case RingNumber.TYPE_CODE.INTEGER:
+            case GroupNumber.TYPE.INTEGER:
                 return new Q(_A + _B * rA, _B);
 
-            case RingNumber.TYPE_CODE.RATIONAL:
+            case GroupNumber.TYPE.RATIONAL:
                 return new Q(_A * rB + _B * rA, _B * rB);
 
-            case RingNumber.TYPE_CODE.REAL:
-            case RingNumber.TYPE_CODE.COMPLEX:
+            case GroupNumber.TYPE.REAL:
+            case GroupNumber.TYPE.COMPLEX:
                 return r.plus(this);
 
             default:
@@ -137,18 +137,18 @@ public class Q extends DivisionRingNumber {
 
 
     @Override
-    public RingNumber times(RingNumber r) {
+    public DivisionRingNumber times(RingNumber r) {
 
-        switch (r.TYPE) {
+        switch (r.type) {
 
-            case RingNumber.TYPE_CODE.INTEGER:
+            case GroupNumber.TYPE.INTEGER:
                 return new Q(A.longValue() * r.A.longValue(), B.longValue());
                 
-            case RingNumber.TYPE_CODE.RATIONAL:
+            case GroupNumber.TYPE.RATIONAL:
                 return new Q(A.longValue() * r.A.longValue(), B.longValue() * r.B.longValue());
 
-            case RingNumber.TYPE_CODE.REAL:
-            case RingNumber.TYPE_CODE.COMPLEX:
+            case GroupNumber.TYPE.REAL:
+            case GroupNumber.TYPE.COMPLEX:
                 return r.times(this);
 
             default:

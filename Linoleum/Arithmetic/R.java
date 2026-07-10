@@ -10,7 +10,7 @@ public class R extends DivisionRingNumber {
 
     public R() {
 
-        this.TYPE = RingNumber.TYPE_CODE.REAL;
+        this.type = GroupNumber.TYPE.REAL;
         this.A = zero;
         this.B = 1;
         this.C = 0;
@@ -20,7 +20,7 @@ public class R extends DivisionRingNumber {
 
     public R(Double r) {
 
-        this.TYPE = RingNumber.TYPE_CODE.REAL;
+        this.type = GroupNumber.TYPE.REAL;
         this.A = r;
         this.B = 1;
         this.C = 0;
@@ -30,7 +30,7 @@ public class R extends DivisionRingNumber {
 
     public R(R s) {
 
-        this.TYPE = RingNumber.TYPE_CODE.REAL;
+        this.type = GroupNumber.TYPE.REAL;
         this.A = s.A.doubleValue();
         this.B = 1;
         this.C = 0;
@@ -40,7 +40,7 @@ public class R extends DivisionRingNumber {
 
     public R(Q s) {
 
-        this.TYPE = RingNumber.TYPE_CODE.REAL;
+        this.type = GroupNumber.TYPE.REAL;
         this.A = s.A.doubleValue() / s.B.doubleValue();
         this.B = 1;
         this.C = 0;
@@ -50,7 +50,7 @@ public class R extends DivisionRingNumber {
 
     public R(Z n) {
 
-        this.TYPE = RingNumber.TYPE_CODE.REAL;
+        this.type = GroupNumber.TYPE.REAL;
         this.A = n.A.doubleValue();
         this.B = 1;
         this.C = 0;
@@ -58,9 +58,9 @@ public class R extends DivisionRingNumber {
     }
 
 
-    public R(RingNumber k) {
+    public R(GroupNumber k) {
 
-        this.TYPE = RingNumber.TYPE_CODE.REAL;
+        this.type = GroupNumber.TYPE.REAL;
         this.A = k.A.doubleValue();
         this.B = 1;
         this.C = 0;
@@ -85,25 +85,25 @@ public class R extends DivisionRingNumber {
 
 
     @Override
-    public RingNumber plus(RingNumber s) {
+    public DivisionRingNumber plus(GroupNumber s) {
 
         Double sA = s.A.doubleValue();
         Double sB = s.B.doubleValue();
 
         Double _A = A.doubleValue();
 
-        switch (s.TYPE) {
+        switch (s.type) {
 
-            case RingNumber.TYPE_CODE.INTEGER:
+            case GroupNumber.TYPE.INTEGER:
                 return new R(_A + sA);
 
-            case RingNumber.TYPE_CODE.RATIONAL:
+            case GroupNumber.TYPE.RATIONAL:
                 return new R(sA / sB + _A);
 
-            case RingNumber.TYPE_CODE.REAL:
+            case GroupNumber.TYPE.REAL:
                 return new R(sA + _A);
 
-            case RingNumber.TYPE_CODE.COMPLEX:
+            case GroupNumber.TYPE.COMPLEX:
                 return s.plus(this);
 
             default:
@@ -123,25 +123,25 @@ public class R extends DivisionRingNumber {
 
 
     @Override
-    public RingNumber times(RingNumber s) {
+    public DivisionRingNumber times(RingNumber s) {
 
         Double sA = s.A.doubleValue();
         Double sB = s.B.doubleValue();
 
         Double _A = A.doubleValue();
 
-        switch (s.TYPE) {
+        switch (s.type) {
 
-            case RingNumber.TYPE_CODE.INTEGER:
+            case GroupNumber.TYPE.INTEGER:
                 return new R(_A * sA);
 
-            case RingNumber.TYPE_CODE.RATIONAL:
+            case GroupNumber.TYPE.RATIONAL:
                 return new R(_A * sA / sB);
 
-            case RingNumber.TYPE_CODE.REAL:
+            case GroupNumber.TYPE.REAL:
                 return new R(_A * sA);
 
-            case RingNumber.TYPE_CODE.COMPLEX:
+            case GroupNumber.TYPE.COMPLEX:
                 return s.times(this);
 
             default:

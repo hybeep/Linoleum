@@ -101,8 +101,6 @@ public class Zn extends RingIdentityNumber {
     }
 
     
-
-
     public Long getZ() {
 
         return A.longValue();

@@ -12,7 +12,7 @@ public class C extends DivisionRingNumber {
 
     public C() {
 
-        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
+        this.type = GroupNumber.TYPE.COMPLEX;
         this.A = zero;
         this.B = zero;
         this.C = 0;
@@ -22,7 +22,7 @@ public class C extends DivisionRingNumber {
     
     public C(Double A, Double B, int form) {
 
-        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
+        this.type = GroupNumber.TYPE.COMPLEX;
         this.C = form;
         this.A = A;
         this.B = B;
@@ -49,7 +49,7 @@ public class C extends DivisionRingNumber {
 
     public C(C z) {
 
-        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
+        this.type = GroupNumber.TYPE.COMPLEX;
         this.C = z.C.intValue();
         this.A = z.A.doubleValue();
         this.B = z.B.doubleValue();
@@ -59,6 +59,7 @@ public class C extends DivisionRingNumber {
 
     public C(C z, int form) {
 
+        this.type = GroupNumber.TYPE.COMPLEX;
         Double zA = z.A.doubleValue();
         Double zB = z.B.doubleValue();
         int zC = z.C.intValue();
@@ -87,7 +88,7 @@ public class C extends DivisionRingNumber {
 
     public C(R r) {
 
-        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
+        this.type = GroupNumber.TYPE.COMPLEX;
         this.A = r.A.doubleValue();
         this.B = 0D;
         this.C = 0;
@@ -97,7 +98,7 @@ public class C extends DivisionRingNumber {
 
     public C(Q r) {
 
-        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
+        this.type = GroupNumber.TYPE.COMPLEX;
         this.A = r.A.doubleValue() / r.B.doubleValue();
         this.B = 0D;
         this.C = 0;
@@ -107,7 +108,7 @@ public class C extends DivisionRingNumber {
 
     public C(Z n) {
 
-        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
+        this.type = GroupNumber.TYPE.COMPLEX;
         this.A = n.A.doubleValue();
         this.B = 0D;
         this.C = 0;
@@ -115,9 +116,9 @@ public class C extends DivisionRingNumber {
     }
 
 
-    public C(RingNumber k) {
+    public C(GroupNumber k) {
 
-        this.TYPE = RingNumber.TYPE_CODE.COMPLEX;
+        this.type = GroupNumber.TYPE.COMPLEX;
         this.A = k.A.doubleValue();
         this.B = k.B.doubleValue();
         this.C = k.C.intValue();
@@ -142,23 +143,23 @@ public class C extends DivisionRingNumber {
 
 
     @Override
-    public RingNumber plus(RingNumber w) {
+    public DivisionRingNumber plus(GroupNumber w) {
 
         C zPair = new C(this, 0);
 
         C sum;
-        switch (w.TYPE) {
+        switch (w.type) {
 
-            case RingNumber.TYPE_CODE.INTEGER:
-            case RingNumber.TYPE_CODE.REAL:
+            case GroupNumber.TYPE.INTEGER:
+            case GroupNumber.TYPE.REAL:
                 sum = new C(w.A.doubleValue() + zPair.A.doubleValue(), zPair.B.doubleValue(), 0);
                 return new C(sum, C.intValue());
 
-            case RingNumber.TYPE_CODE.RATIONAL:
+            case GroupNumber.TYPE.RATIONAL:
                 sum = new C(w.A.doubleValue() / w.B.doubleValue() + zPair.A.doubleValue(), zPair.B.doubleValue(), 0);
                 return new C(sum, C.intValue());
 
-            case RingNumber.TYPE_CODE.COMPLEX:
+            case GroupNumber.TYPE.COMPLEX:
                 C wComplex = new C(w);
                 C wPair = new C(wComplex, 0);
                 sum = new C(zPair.A.doubleValue() + wPair.A.doubleValue(), zPair.B.doubleValue() + wPair.B.doubleValue(), 0);
@@ -184,23 +185,23 @@ public class C extends DivisionRingNumber {
 
 
     @Override
-    public RingNumber times(RingNumber w) {
+    public DivisionRingNumber times(RingNumber w) {
 
         C zPolar = new C(this, 0);
 
         C prod;
-        switch (w.TYPE) {
+        switch (type) {
 
-            case RingNumber.TYPE_CODE.INTEGER:
-            case RingNumber.TYPE_CODE.REAL:
+            case GroupNumber.TYPE.INTEGER:
+            case GroupNumber.TYPE.REAL:
                 prod = new C(w.A.doubleValue() * zPolar.A.doubleValue(), zPolar.B.doubleValue(), 1);
                 return new C(prod, C.intValue());
 
-            case RingNumber.TYPE_CODE.RATIONAL:
+            case GroupNumber.TYPE.RATIONAL:
                 prod = new C(zPolar.A.doubleValue() * w.A.doubleValue() / w.B.doubleValue(), zPolar.B.doubleValue(), 1);
                 return new C(prod, C.intValue());
                 
-            case RingNumber.TYPE_CODE.COMPLEX:
+            case GroupNumber.TYPE.COMPLEX:
                 C wPolar = new C(new C(w), 1);
                 prod = new C(zPolar.A.doubleValue() * wPolar.A.doubleValue(), zPolar.B.doubleValue() + wPolar.B.doubleValue(), 1);
                 return new C(prod, C.intValue());
@@ -284,6 +285,7 @@ public class C extends DivisionRingNumber {
     }
 
 
+    @Override
     public String format() {
 
         return (C.intValue() == 0) ?

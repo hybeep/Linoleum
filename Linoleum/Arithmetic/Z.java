@@ -11,7 +11,7 @@ public class Z extends RingIdentityNumber {
 
     public Z() {
 
-        this.TYPE = RingNumber.TYPE_CODE.INTEGER;
+        this.type = GroupNumber.TYPE.INTEGER;
         this.A = zero;
         this.B = 1;
         this.C = 0;
@@ -21,7 +21,7 @@ public class Z extends RingIdentityNumber {
 
     public Z(Long A) {
 
-        this.TYPE = RingNumber.TYPE_CODE.INTEGER;
+        this.type = GroupNumber.TYPE.INTEGER;
         this.A = A;
         this.B = 1;
         this.C = 0;
@@ -31,7 +31,7 @@ public class Z extends RingIdentityNumber {
 
     public Z(Z m) {
 
-        this.TYPE = RingNumber.TYPE_CODE.INTEGER;
+        this.type = GroupNumber.TYPE.INTEGER;
         this.A = m.A.longValue();
         this.B = 1;
         this.C = 0;
@@ -39,9 +39,9 @@ public class Z extends RingIdentityNumber {
     }
 
 
-    public Z(RingNumber k) {
+    public Z(GroupNumber k) {
 
-        this.TYPE = RingNumber.TYPE_CODE.INTEGER;
+        this.type = GroupNumber.TYPE.INTEGER;
         this.A = k.A.longValue();
         this.B = 1;
         this.C = 0;
@@ -65,16 +65,16 @@ public class Z extends RingIdentityNumber {
 
 
     @Override
-    public RingNumber plus(RingNumber m) {
+    public RingIdentityNumber plus(GroupNumber m) {
 
-        switch (m.TYPE) {
+        switch (m.type) {
 
-            case RingNumber.TYPE_CODE.INTEGER:
+            case GroupNumber.TYPE.INTEGER:
                 return new Z(A.longValue() + m.A.longValue());
             
-            case RingNumber.TYPE_CODE.RATIONAL:
-            case RingNumber.TYPE_CODE.REAL:
-            case RingNumber.TYPE_CODE.COMPLEX:
+            case GroupNumber.TYPE.RATIONAL:
+            case GroupNumber.TYPE.REAL:
+            case GroupNumber.TYPE.COMPLEX:
                 return m.plus(this);
 
             default:
@@ -95,16 +95,16 @@ public class Z extends RingIdentityNumber {
 
 
     @Override
-    public RingNumber times(RingNumber m) {
+    public RingIdentityNumber times(RingNumber m) {
 
-        switch (m.TYPE) {
+        switch (m.type) {
 
-            case RingNumber.TYPE_CODE.INTEGER:
+            case GroupNumber.TYPE.INTEGER:
                 return new Z(A.longValue() * m.A.longValue());
 
-            case RingNumber.TYPE_CODE.RATIONAL:
-            case RingNumber.TYPE_CODE.REAL:
-            case RingNumber.TYPE_CODE.COMPLEX:
+            case GroupNumber.TYPE.RATIONAL:
+            case GroupNumber.TYPE.REAL:
+            case GroupNumber.TYPE.COMPLEX:
                 return m.times(this);
 
             default:
