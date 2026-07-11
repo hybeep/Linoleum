@@ -141,7 +141,6 @@ public class RingDirectSum {
 
         return sum;
 
-
     }
 
 
@@ -150,24 +149,6 @@ public class RingDirectSum {
         return dirSum1.times(dirSum2);
 
     }
-
-
-    public static RingDirectSum mult(ArrayList<RingDirectSum> dirSums) {
-
-        if (dirSums.size() == 0)
-            throw new EmptyArrayException();
-
-        Iterator<RingDirectSum> it = dirSums.iterator();
-        RingDirectSum prod = it.next();
-
-        while(it.hasNext())
-            prod = prod.times(it.next());
-
-        return prod;
-
-
-    }
-
 
     
 }

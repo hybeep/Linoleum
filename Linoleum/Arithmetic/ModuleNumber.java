@@ -2,6 +2,7 @@ package Arithmetic;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 import Arithmetic.GroupNumber.TYPE;
@@ -10,7 +11,7 @@ import Arithmetic.GroupNumber.TYPE;
 public abstract class ModuleNumber {
 
     TYPE type;
-    MOD_TYPE MOD_TYPE;
+    MOD_TYPE mod_type;
 
     Number A, B, C;
     ArrayList<RingNumber> entries;
@@ -18,6 +19,7 @@ public abstract class ModuleNumber {
     public static enum MOD_TYPE {
 
         POLYNOMIAL,
+        VECTOR,
         MATRIX
 
     }
@@ -32,14 +34,11 @@ public abstract class ModuleNumber {
     abstract public ModuleNumber negative();
 
 
-    final public ModuleNumber minus(ModuleNumber m) {
+    public ModuleNumber minus(ModuleNumber m) {
         
         return plus(m.negative());
     
     }
-    
-
-    abstract public ModuleNumber times(RingNumber m);
 
 
     public ModuleNumber times(Long n) {
@@ -54,37 +53,26 @@ public abstract class ModuleNumber {
         return prod;
 
     }
+    
 
-
-    public RingNumber pow(Long n) {
-
-        int i;
-
-        RingNumber pow = this;
-
-        for (i = 1; i < n; i++)
-            pow = pow.times(this);
-
-        return pow;
-
-    }
+    abstract public ModuleNumber times(RingNumber m);
 
 
     abstract public boolean isZero();
 
 
-    public static RingNumber sum(RingNumber a, RingNumber b) {
+    public static ModuleNumber sum(ModuleNumber a, ModuleNumber b) {
 
         return a.plus(b);
 
     }
 
 
-    public static RingNumber sum(ArrayList<RingNumber> nums) {
+    public static ModuleNumber sum(ArrayList<ModuleNumber> nums) {
 
-        Iterator<RingNumber> it = nums.iterator();
+        Iterator<ModuleNumber> it = nums.iterator();
 
-        RingNumber sum;
+        ModuleNumber sum;
 
         if (it.hasNext())
             sum = it.next();
@@ -100,28 +88,9 @@ public abstract class ModuleNumber {
     }
 
 
-    public static RingNumber mult(RingNumber a, RingNumber b) {
+    public static ModuleNumber mult(ModuleNumber a, RingNumber b) {
 
         return a.times(b);
-
-    }
-
-
-    public static RingNumber mult(ArrayList<RingNumber> nums) {
-
-        Iterator<RingNumber> it = nums.iterator();
-
-        RingNumber mult;
-
-        if (it.hasNext())
-            mult = it.next();
-        else
-            throw new Error();
-
-        while (it.hasNext())
-            mult = mult.times(it.next());
-
-        return mult;
 
     }
 
@@ -157,12 +126,18 @@ public abstract class ModuleNumber {
     }
 
 
-    final public TYPE_CODE getType() {
+    final public TYPE getType() {
 
-        return TYPE;
+        return type;
 
     }
 
 
+    final public MOD_TYPE getModType() {
+
+        return mod_type;
+
+    }
+    
     
 }

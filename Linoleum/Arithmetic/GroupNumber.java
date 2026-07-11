@@ -90,7 +90,6 @@ public abstract class GroupNumber {
         else
             throw new EmptyArrayException();
 
-
         while (it.hasNext())
             sum = sum.plus(it.next());
 
