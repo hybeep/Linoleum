@@ -1,85 +1,87 @@
 package Arithmetic;
 
-public class Zn extends RingIdentityNumber {
+import java.util.ArrayList;
 
-    // [A]_B
+final public class Zn extends IdentityRingNumber {
+
+    private TYPE type;
+    private Long A, B;
 
     private Long zero = 0L;
     private Long one = 1L;
 
-
     public Zn(Long Z, Long N) {
 
-        this.type = GroupNumber.TYPE.MODN;
+        this.type = TYPE.MODN;
         this.A = Z;
         this.B = N >= 0L ? N : -N;
-        this.C = 0;
         reduce();
 
     }
 
-
     public Zn(Zn c) {
 
-        this.type = GroupNumber.TYPE.MODN;
-        this.A = c.A.longValue();
-        this.B = c.B.longValue();
-        this.C = 0;
+        this.type = TYPE.MODN;
+        this.A = c.A;
+        this.B = c.B;
 
     }
 
+    public Zn(Element a) {
 
-    public Zn(GroupNumber a) {
-
-        this.type = GroupNumber.TYPE.MODN;
+        Zn aZn = new Zn(a.A().longValue(), a.B().longValue());
         
-        Zn aZn = new Zn(a.A.longValue(), a.B.longValue());
-
+        this.type = TYPE.MODN;
         this.A = aZn.A.longValue();
         this.B = aZn.B.longValue();
-        this.C = 0;
-
 
     }
-
 
     private void reduce() {
 
-        while(A.longValue() < zero)
-            A = A.longValue() + B.longValue();
+        while(A < zero)
+            A += B;
 
-        while(B.longValue() <= A.longValue())
-            A = A.longValue() - B.longValue();
+        while(B <= A)
+            A -=  B;
 
     }
-
 
     @Override
     public Zn zero() {
 
-        return new Zn(zero, B.longValue());
+        return new Zn(zero, B);
 
     }
-
 
     @Override
     public Zn identity() {
 
-        return new Zn(one, B.longValue());
+        return new Zn(one, B);
 
     }
-
 
     @Override
-    public Zn plus(GroupNumber c) {
+    public Zn plus(Summable c) {
 
-        if (c.type != type || Long.compare(c.B.longValue(), B.longValue()) != 0)
+        if (c.type() != TYPE.MODN || Long.compare(c.B().longValue(), B) != 0)
             throw new IncompatibleTypesException();
         
-        return new Zn(A.longValue() + c.A.longValue(), B.longValue());
+        return new Zn(A + c.A().longValue(), B);
 
     }
 
+    @Override
+    public Zn plus(ArrayList<Summable> l) {
+
+        Zn sum = this;
+
+        for (Summable num : l)
+            sum = sum.plus(num);
+
+        return sum;
+
+    }
 
     @Override
     public Zn negative() {
@@ -88,44 +90,88 @@ public class Zn extends RingIdentityNumber {
 
     }
 
+    @Override
+    public Zn minus(Subtractable b) {
+
+        return plus(b.negative());
+
+    }
 
     @Override
-    public Zn times(RingNumber c) {
+    public Zn times(int n) {
 
-        if (c.type != type || Long.compare(c.B.longValue(), B.longValue()) != 0)
+        return new Zn(n * A, B);
+
+    }
+
+    @Override
+    public Zn times(Multipliable c) {
+
+        if (c.type() != type || Long.compare(c.B().longValue(), B) != 0)
             throw new IncompatibleTypesException();
         
-        return new Zn(A.longValue() * c.A.longValue(), B.longValue());
+        return new Zn(A * c.A().longValue(), B);
         
     }
 
+    @Override
+    public Zn times(ArrayList<Multipliable> l) {
+
+        Zn prod = this;
+
+        for (Multipliable num : l)
+            prod = prod.times(num);
+
+        return prod;
+
+    }
 
     @Override
     public boolean isZero() {
 
-        return Long.compare(A.longValue(), zero) == 0;
+        return Long.compare(A, zero) == 0;
 
     }
-
 
     @Override
     public String format() {
 
-        return "[" + A.longValue()+ "]_" + B.longValue();
+        return "[" + A+ "]_" + B;
 
     }
 
+    @Override
+    public TYPE type() {
+
+        return type;
+
+    }
     
-    public Long getZ() {
+    @Override
+    public Long A() {
 
-        return A.longValue();
+        return A;
 
     }
 
+    @Override
+    public Long B() {
 
-    public Long getN() {
+        return B;
 
-        return B.longValue();
+    }
+
+    @Override
+    public Long C() {
+
+        return one;
+
+    }
+
+    @Override
+    public ArrayList<Number> extended_data() {
+
+        return new ArrayList<Number>();
 
     }
     

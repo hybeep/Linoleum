@@ -1,114 +1,41 @@
 package Arithmetic;
 
+import java.util.ArrayList;
 
-public abstract class DivisionRingNumber extends RingIdentityNumber {
+public abstract class DivisionRingNumber extends IdentityRingNumber implements Invertible {
 
+@Override
+    public abstract DivisionRingNumber plus(Summable b);
+
+    @Override
+    public abstract DivisionRingNumber plus(ArrayList<Summable> l);
 
     @Override
     public abstract DivisionRingNumber zero();
 
-
-    @Override
-    public abstract DivisionRingNumber plus(GroupNumber s);
-
-
     @Override
     public abstract DivisionRingNumber negative();
 
+    @Override
+    public abstract DivisionRingNumber minus(Subtractable b);
 
     @Override
-    final public DivisionRingNumber minus(GroupNumber m) {
-        
-        return plus(m.negative());
-    
-    }
-    
+    public abstract DivisionRingNumber times(int n);
 
     @Override
-    final public DivisionRingNumber times(int n) {
+    public abstract DivisionRingNumber times(Multipliable b);
 
-        DivisionRingNumber bs;
-
-        if (n == 0L) {
-
-            bs = zero();
-            return bs;
-
-        } else if (n < 0L) {
-
-            bs = this.negative();
-            n = -n;
-
-        } else {
-
-            bs = this;
-
-        }
-
-        DivisionRingNumber prod = bs;
-        int i;
-        for (i = 1; i < n; i++)
-            prod = prod.plus(bs);
-
-        return prod;
-
-    }
-
+    @Override
+    public abstract DivisionRingNumber times(ArrayList<Multipliable> l);
 
     @Override
     public abstract DivisionRingNumber identity();
 
-
     @Override
-    public abstract DivisionRingNumber times(RingNumber m);
+    public abstract DivisionRingNumber inverse();
 
+    public abstract DivisionRingNumber div(Invertible b);
 
-    abstract public DivisionRingNumber inverse();
-
-
-    final public DivisionRingNumber div(DivisionRingNumber r) {
-
-        return times(r.inverse());
-
-    }
-
-
-    final public DivisionRingNumber pow(int n) {
-
-        
-        DivisionRingNumber bs;
-
-        if (n == 0L) {
-
-            bs = identity();
-            return bs;
-
-        } else if (n < 0L) {
-
-            bs = this.inverse();
-            n = -n;
-
-        } else {
-
-            bs = this;
-
-        }
-
-        DivisionRingNumber prod = bs;
-        int i;
-        for (i = 1; i < n; i++)
-            prod = prod.times(bs);
-
-        return prod;
-
-    }
-
-
-    public static DivisionRingNumber div(DivisionRingNumber a, DivisionRingNumber b) {
-
-        return a.times(b.inverse());
-
-    }
-
+    public abstract DivisionRingNumber pow(int n);
     
 }

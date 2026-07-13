@@ -1,27 +1,26 @@
 package Arithmetic;
 
+import java.util.ArrayList;
 
-public class Q extends DivisionRingNumber {
+final public class Q extends DivisionRingNumber {
 
+    private TYPE type;
+    private Long A, B;
 
     private final Long zero = 0L;
     private final Long one = 1L;
 
-
     public Q() {
 
-        this.type = GroupNumber.TYPE.RATIONAL;
+        this.type = TYPE.RATIONAL;
         this.A = zero;
         this.B = one;
-        this.C = 1;
 
     }
 
-
     public Q(Long P, Long Q) {
 
-        this.type = GroupNumber.TYPE.RATIONAL;
-        this.C = 1;
+        this.type = TYPE.RATIONAL;
 
         if (Long.compare(Q, zero) == 0)
             throw new DivideByZeroException();
@@ -43,45 +42,38 @@ public class Q extends DivisionRingNumber {
 
         }
         
-        Long gcd = DivisionAlgorithm.gcd(this.A.longValue(), this.B.longValue())[2];
+        Long gcd = DivisionAlgorithm.gcd(this.A, this.B)[2];
 
         this.A = this.A.longValue() / gcd;
         this.B = this.B.longValue() / gcd;
         
     }
 
-
     public Q(Q r) {
 
-        this.type = GroupNumber.TYPE.RATIONAL;
+        this.type = TYPE.RATIONAL;
         this.A = r.A.longValue();
         this.B = r.B.longValue();
-        this.C = 1;
 
     }
-
 
     public Q(Z n) {
 
-        this.type = GroupNumber.TYPE.RATIONAL;
-        this.A = n.A.longValue();
+        this.type = TYPE.RATIONAL;
+        this.A = n.A().longValue();
         this.B = one;
-        this.C = 1;
 
     }
 
-
-    public Q(GroupNumber k) {
+    public Q(Element k) {
        
-        Q i = new Q(k.A.longValue(), k.B.longValue());
+        Q i = new Q(k.A().longValue(), k.B().longValue());
         
-        this.type = GroupNumber.TYPE.RATIONAL;
-        this.A = i.A.longValue();
-        this.B = i.B.longValue();
-        this.C = 1;
+        this.type = TYPE.RATIONAL;
+        this.A = i.A;
+        this.B = i.B;
 
     }
-
 
     @Override
     public Q zero() {
@@ -90,7 +82,6 @@ public class Q extends DivisionRingNumber {
 
     }
 
-
     @Override
     public Q identity() {
         
@@ -98,26 +89,16 @@ public class Q extends DivisionRingNumber {
         
     }
 
-
     @Override
-    public DivisionRingNumber plus(GroupNumber r) {
+    public Q plus(Summable r) {
 
-        switch (r.type) {
+        switch (r.type()) {
 
-            case GroupNumber.TYPE.INTEGER:
-                return new Q(A.longValue() + B.longValue() * r.A.longValue(), B.longValue());
+            case TYPE.INTEGER:
+                return new Q(A + B * r.A().longValue(), B);
 
-            case GroupNumber.TYPE.RATIONAL:
-                return new Q(A.longValue() * r.B.longValue() + B.longValue() * r.A.longValue(), B.longValue() * r.B.longValue());
-
-            case GroupNumber.TYPE.REAL:
-                return new R(r.A.doubleValue() + A.doubleValue() / B.doubleValue());
-
-            case GroupNumber.TYPE.COMPLEX:
-                C rComplex = new C(r);
-                C rPair = new C(rComplex, 0);
-                C sum = new C(rPair.A.doubleValue() + A.doubleValue() / B.doubleValue(), rPair.B.doubleValue(), 0);
-                return new C(sum, rComplex.C.intValue());
+            case TYPE.RATIONAL:
+                return new Q(A * r.B().longValue() + B * r.A().longValue(), B * r.B().longValue());
 
             default:
                 throw new IncompatibleTypesException();
@@ -126,34 +107,49 @@ public class Q extends DivisionRingNumber {
 
     }
 
+    @Override
+    public Q plus(ArrayList<Summable> l) {
+
+        Q sum = this;
+
+        for (Summable num : l)
+            sum = sum.plus(num);
+
+        return sum;
+
+    }
 
     @Override
     public Q negative() {
 
-        return new Q(-A.longValue(), B.longValue());
+        return new Q(-A, B);
 
     }
 
+    @Override
+    public Q minus(Subtractable b) {
+
+        return plus(b.negative());
+
+    }
 
     @Override
-    public DivisionRingNumber times(RingNumber r) {
+    public Q times(int n) {
 
-        switch (r.type) {
+        return new Q(n * A, B);
 
-            case GroupNumber.TYPE.INTEGER:
-                return new Q(A.longValue() * r.A.longValue(), B.longValue());
+    }
+
+    @Override
+    public Q times(Multipliable r) {
+
+        switch (r.type()) {
+
+            case TYPE.INTEGER:
+                return new Q(A * r.A().longValue(), B);
                 
-            case GroupNumber.TYPE.RATIONAL:
-                return new Q(A.longValue() * r.A.longValue(), B.longValue() * r.B.longValue());
-
-            case GroupNumber.TYPE.REAL:
-                return new R(r.A.doubleValue() * A.doubleValue() / B.doubleValue());
-
-            case GroupNumber.TYPE.COMPLEX:
-                C rComplex = new C(r);
-                C rPolar = new C(rComplex, 1);
-                C prod = new C(rPolar.A.doubleValue() * A.doubleValue() / B.doubleValue(), rPolar.B.doubleValue(), 1);
-                return new C(prod, rComplex.C.intValue());
+            case TYPE.RATIONAL:
+                return new Q(A * r.A().longValue(), B * r.B().longValue());
 
             default:
                 throw new IncompatibleTypesException();
@@ -162,43 +158,109 @@ public class Q extends DivisionRingNumber {
 
     }
 
+    @Override
+    public Q times(ArrayList<Multipliable> l) {
+
+        Q prod = this;
+
+        for (Multipliable num : l)
+            prod = prod.times(num);
+
+        return prod;
+
+    }
 
     @Override
     public boolean isZero() {
 
-        return Long.compare(A.longValue(), zero) == 0;
+        return Long.compare(A, zero) == 0;
 
     }
-
 
     @Override
     public Q inverse() {
 
-        return new Q(B.longValue(), A.longValue());
+        return new Q(B, A);
 
     }
 
+    @Override
+    public Q div(Invertible b) {
+
+        return times(b.inverse());
+
+    }
+
+    @Override
+    public Q pow(int n) {
+
+        Q s;
+
+        if (n == 0) {
+
+            s = identity();
+
+        } else if (n <= 0) {
+
+            s = inverse();
+            n = -n;
+
+        } else {
+
+            s = this;
+
+        }
+
+        Q power = s;
+
+        int i;
+        for (i = 1; i < n; i++)
+            power = power.times(s);
+
+        return power;
+
+    }
 
     @Override
     public String format() {
 
-        return A.longValue() + "/" + B.longValue();
+        return "" + A + "/" + B;
 
     }
 
+    @Override
+    public TYPE type() {
 
-    public Long getP() {
-
-        return A.longValue();
-
-    }
-
-
-    public Long getQ() {
-
-        return B.longValue();
+        return type;
 
     }
 
+    @Override
+    public Long A() {
+
+        return A;
+
+    }
+
+    @Override
+    public Long B() {
+
+        return B;
+
+    }
+
+    @Override
+    public Long C() {
+
+        return one;
+
+    }
+
+    @Override
+    public ArrayList<Number> extended_data() {
+
+        return new ArrayList<Number>();
+
+    }
     
 }

@@ -1,9 +1,12 @@
 package Arithmetic;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class DivisionRingDirectSum {
+
+final public class DivisionRingDirectSum {
+
 
     ArrayList<DivisionRingNumber> entries;
 
@@ -28,23 +31,21 @@ public class DivisionRingDirectSum {
     public DivisionRingDirectSum zero() {
         
         ArrayList<DivisionRingNumber> zero = new ArrayList<>();
-        Iterator<DivisionRingNumber> it = entries.iterator();
-
-        while (it.hasNext())
-            zero.add(it.next().zero());
+        
+        for (DivisionRingNumber num : entries)
+            zero.add(num.zero());
 
         return new DivisionRingDirectSum(zero);
 
     }
 
 
-    public DivisionRingDirectSum one() {
+    public DivisionRingDirectSum identity() {
         
         ArrayList<DivisionRingNumber> one = new ArrayList<>();
-        Iterator<DivisionRingNumber> it = entries.iterator();
-
-        while (it.hasNext())
-            one.add(it.next().identity());
+        
+        for (DivisionRingNumber num : entries)
+            one.add(num.identity());
 
         return new DivisionRingDirectSum(one);
 
@@ -72,10 +73,9 @@ public class DivisionRingDirectSum {
     public DivisionRingDirectSum negative() {
 
         ArrayList<DivisionRingNumber> neg = new ArrayList<>();
-        Iterator<DivisionRingNumber> it = entries.iterator();
-
-        while(it.hasNext())
-            neg.add(it.next().negative());
+        
+        for (DivisionRingNumber num : entries)
+            neg.add(num.negative());
 
         return new DivisionRingDirectSum(neg);
 
@@ -92,10 +92,9 @@ public class DivisionRingDirectSum {
     public DivisionRingDirectSum times(int n) {
 
         ArrayList<DivisionRingNumber> prod = new ArrayList<>();
-        Iterator<DivisionRingNumber> it = entries.iterator();
-
-        while(it.hasNext())
-            prod.add(it.next().times(n));
+        
+        for (DivisionRingNumber num : entries)
+            prod.add(num.times(n));
 
         return new DivisionRingDirectSum(prod);
 
@@ -107,15 +106,15 @@ public class DivisionRingDirectSum {
         if (s.entries.size() != entries.size())
             throw new IncompatibleTypesException();
 
-        ArrayList<DivisionRingNumber> sum = new ArrayList<>();
+        ArrayList<DivisionRingNumber> prod = new ArrayList<>();
         
         int n = entries.size();
 
         int i;
         for (i = 0; i < n; i++)
-            sum.add(entries.get(i).times(s.entries.get(i)));
+            prod.add(entries.get(i).times(s.entries.get(i)));
 
-        return new DivisionRingDirectSum(sum);
+        return new DivisionRingDirectSum(prod);
         
     }    
 
@@ -123,10 +122,9 @@ public class DivisionRingDirectSum {
     public DivisionRingDirectSum inverse() {
 
         ArrayList<DivisionRingNumber> inv = new ArrayList<>();
-        Iterator<DivisionRingNumber> it = entries.iterator();
-
-        while(it.hasNext())
-            inv.add(it.next().inverse());
+        
+        for (DivisionRingNumber num : entries)
+            inv.add(num.inverse());
 
         return new DivisionRingDirectSum(inv);
 
@@ -145,8 +143,10 @@ public class DivisionRingDirectSum {
         boolean isZero = true;
         
         for (GroupNumber num : entries)
-            if (!num.isZero())
+            if (!num.isZero()) {
                 isZero = false;
+                break;
+            }
 
         return isZero;
 
@@ -197,5 +197,6 @@ public class DivisionRingDirectSum {
         return prod;
 
     }
+    
     
 }

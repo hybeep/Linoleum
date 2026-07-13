@@ -1,28 +1,31 @@
 package Arithmetic;
 
+import java.util.ArrayList;
 
-public class C extends DivisionRingNumber {
+final public class C extends DivisionRingNumber {
 
     //C is and integer, if it is 0 the number is an ordered pair A+iB 
     // else it is in polar representation Ae^iB
 
+    private TYPE type;
+    private Double A, B;
+    private int C;
+
     private final Double zero = 0D;
     private final Double one = 1D;
 
-
     public C() {
 
-        this.type = GroupNumber.TYPE.COMPLEX;
+        this.type = TYPE.COMPLEX;
         this.A = zero;
         this.B = zero;
         this.C = 0;
 
     }
 
-    
     public C(Double A, Double B, int form) {
 
-        this.type = GroupNumber.TYPE.COMPLEX;
+        this.type = TYPE.COMPLEX;
         this.C = form;
         this.A = A;
         this.B = B;
@@ -46,25 +49,23 @@ public class C extends DivisionRingNumber {
 
     }
 
-
     public C(C z) {
 
-        this.type = GroupNumber.TYPE.COMPLEX;
-        this.C = z.C.intValue();
-        this.A = z.A.doubleValue();
-        this.B = z.B.doubleValue();
+        this.type = TYPE.COMPLEX;
+        this.C = (z.C == 0) ? 0 : 1;
+        this.A = z.A;
+        this.B = z.B;
 
     }
 
-
     public C(C z, int form) {
 
-        this.type = GroupNumber.TYPE.COMPLEX;
-        Double zA = z.A.doubleValue();
-        Double zB = z.B.doubleValue();
-        int zC = z.C.intValue();
+        this.type = TYPE.COMPLEX;
+        Double zA = z.A;
+        Double zB = z.B;
+        int zC = z.C;
 
-        this.C = form;
+        this.C = (form == 0) ? 0 : 1;
 
         if ((form == 0 && zC == 0) || (form != 0 && zC != 0)) {
 
@@ -85,46 +86,41 @@ public class C extends DivisionRingNumber {
 
     }
 
-
     public C(R r) {
 
-        this.type = GroupNumber.TYPE.COMPLEX;
-        this.A = r.A.doubleValue();
-        this.B = 0D;
+        this.type = TYPE.COMPLEX;
+        this.A = r.A().doubleValue();
+        this.B = zero;
         this.C = 0;
 
     }
-
 
     public C(Q r) {
 
-        this.type = GroupNumber.TYPE.COMPLEX;
-        this.A = r.A.doubleValue() / r.B.doubleValue();
-        this.B = 0D;
+        this.type = TYPE.COMPLEX;
+        this.A = r.A().doubleValue() / r.B().doubleValue();
+        this.B = zero;
         this.C = 0;
 
     }
-
 
     public C(Z n) {
 
-        this.type = GroupNumber.TYPE.COMPLEX;
-        this.A = n.A.doubleValue();
-        this.B = 0D;
+        this.type = TYPE.COMPLEX;
+        this.A = n.A().doubleValue();
+        this.B = zero;
         this.C = 0;
 
     }
 
+    public C(Element k) {
 
-    public C(GroupNumber k) {
-
-        this.type = GroupNumber.TYPE.COMPLEX;
-        this.A = k.A.doubleValue();
-        this.B = k.B.doubleValue();
-        this.C = k.C.intValue();
+        this.type = TYPE.COMPLEX;
+        this.A = k.A().doubleValue();
+        this.B = k.B().doubleValue();
+        this.C = (k.C().intValue() == 0) ? 0 : 1;
 
     }
-
 
     @Override
     public C zero() {
@@ -133,7 +129,6 @@ public class C extends DivisionRingNumber {
 
     }
 
-
     @Override
     public C identity() {
         
@@ -141,29 +136,28 @@ public class C extends DivisionRingNumber {
         
     }
 
-
     @Override
-    public C plus(GroupNumber w) {
+    public C plus(Summable w) {
 
         C zPair = new C(this, 0);
 
         C sum;
-        switch (w.type) {
+        switch (w.type()) {
 
-            case GroupNumber.TYPE.INTEGER:
-            case GroupNumber.TYPE.REAL:
-                sum = new C(w.A.doubleValue() + zPair.A.doubleValue(), zPair.B.doubleValue(), 0);
-                return new C(sum, C.intValue());
+            case TYPE.INTEGER:
+            case TYPE.REAL:
+                sum = new C(w.A().doubleValue() + zPair.A, zPair.B, 0);
+                return new C(sum, C);
 
-            case GroupNumber.TYPE.RATIONAL:
-                sum = new C(w.A.doubleValue() / w.B.doubleValue() + zPair.A.doubleValue(), zPair.B.doubleValue(), 0);
-                return new C(sum, C.intValue());
+            case TYPE.RATIONAL:
+                sum = new C(w.A().doubleValue() / w.B().doubleValue() + zPair.A, zPair.B, 0);
+                return new C(sum, C);
 
-            case GroupNumber.TYPE.COMPLEX:
+            case TYPE.COMPLEX:
                 C wComplex = new C(w);
                 C wPair = new C(wComplex, 0);
-                sum = new C(zPair.A.doubleValue() + wPair.A.doubleValue(), zPair.B.doubleValue() + wPair.B.doubleValue(), 0);
-                return new C(sum, C.intValue());
+                sum = new C(zPair.A + wPair.A, zPair.B + wPair.B, 0);
+                return new C(sum, C);
 
             default:
                 throw new IncompatibleTypesException();
@@ -172,39 +166,63 @@ public class C extends DivisionRingNumber {
         
     }
 
+    @Override
+    public C plus(ArrayList<Summable> l) {
+
+        C sum = this;
+
+        for (Summable num : l)
+            sum = sum.plus(num);
+
+        return sum;
+
+    }
 
     @Override
     public C negative() {
 
-        return (C.intValue() == 0) ?
-                    new C(-A.doubleValue(), -B.doubleValue(), 0)
+        return (C == 0) ?
+                    new C(-A, -B, 0)
                 : 
-                    new C(A.doubleValue(), B.doubleValue() + Math.PI, 1);
+                    new C(A, B + Math.PI, 1);
 
     }
 
+    @Override
+    public C minus(Subtractable b) {
+
+        return plus(b.negative());
+
+    }
 
     @Override
-    public C times(RingNumber w) {
+    public C times(int n) {
+
+        return new C(n * A, (C == 0) ? n * B : B, C);
+
+    }
+
+    @Override
+    public C times(Multipliable w) {
 
         C zPolar = new C(this, 0);
 
         C prod;
-        switch (type) {
+        switch (w.type()) {
 
-            case GroupNumber.TYPE.INTEGER:
-            case GroupNumber.TYPE.REAL:
-                prod = new C(w.A.doubleValue() * zPolar.A.doubleValue(), zPolar.B.doubleValue(), 1);
-                return new C(prod, C.intValue());
+            case TYPE.INTEGER:
+            case TYPE.REAL:
+                prod = new C(w.A().doubleValue() * zPolar.A, zPolar.B, 1);
+                return new C(prod, C);
 
-            case GroupNumber.TYPE.RATIONAL:
-                prod = new C(zPolar.A.doubleValue() * w.A.doubleValue() / w.B.doubleValue(), zPolar.B.doubleValue(), 1);
-                return new C(prod, C.intValue());
+            case TYPE.RATIONAL:
+                prod = new C(zPolar.A * w.A().doubleValue() / w.B().doubleValue(), zPolar.B, 1);
+                return new C(prod, C);
                 
-            case GroupNumber.TYPE.COMPLEX:
+            case TYPE.COMPLEX:
                 C wPolar = new C(new C(w), 1);
-                prod = new C(zPolar.A.doubleValue() * wPolar.A.doubleValue(), zPolar.B.doubleValue() + wPolar.B.doubleValue(), 1);
-                return new C(prod, C.intValue());
+                prod = new C(zPolar.A * wPolar.A, zPolar.B + wPolar.B, 1);
+                return new C(prod, C);
 
             default:
                 throw new IncompatibleTypesException();
@@ -213,14 +231,24 @@ public class C extends DivisionRingNumber {
 
     }
 
+    @Override
+    public C times(ArrayList<Multipliable> l) {
+
+        C prod = this;
+
+        for (Multipliable num : l)
+            prod = prod.times(num);
+
+        return prod;
+
+    }
 
     @Override
     public boolean isZero() {
 
-        return Double.compare( (new C(this, 1)).A.doubleValue(), zero) == 0;
+        return Double.compare((new C(this, 1)).A, zero) == 0;
 
     }
-
 
     @Override
     public C inverse() {
@@ -230,75 +258,119 @@ public class C extends DivisionRingNumber {
         
         C zPolar = new C(this, 1);
 
-        C invZ = new C(1 / zPolar.A.doubleValue(), -zPolar.B.doubleValue(), 1);
+        C invZ = new C(1 / zPolar.A, -zPolar.B, 1);
         
-        return new C(invZ, C.intValue()); 
+        return new C(invZ, C); 
 
     }
 
-    
-    public C realPow(Double r) {
+    @Override
+    public C div(Invertible b) {
 
-        C zPolar = new C(this, 1);
-
-        if (isZero())
-            return new C(zero, zero, C.intValue());
-
-        C pow = new C(Math.pow(zPolar.A.longValue(), r), r * zPolar.B.longValue(), 1);
-
-        return new C(pow, C.intValue());
+        return times(b.inverse());
 
     }
 
+    @Override
+    public C pow(int n) {
+
+        C s;
+
+        if (n == 0) {
+
+            s = identity();
+
+        } else if (n <= 0) {
+
+            s = inverse();
+            n = -n;
+
+        } else {
+
+            s = this;
+
+        }
+
+        C power = s;
+
+        int i;
+        for (i = 1; i < n; i++)
+            power = power.times(s);
+
+        return power;
+
+    }
 
     public C conjugate() {
 
-        return new C(A.doubleValue(), -B.doubleValue(), C.intValue());
+        return new C(A, -B, C);
 
     }
-
 
     public double norm() {
 
-        Double a = A.doubleValue();
-        Double b = B.doubleValue();
-
-        return (C.intValue() == 0) ? Math.sqrt(a * a + b * b) : a;
+        return (C == 0) ? Math.sqrt(A * A + B * B) : A;
 
     }
 
-
     public void reduce() {
 
-        if (C.intValue() != 0) {
+        if (C != 0) {
 
             Double _2PI = 2 * Math.PI;
 
-            while (B.doubleValue() < zero)
-                B = B.doubleValue() + _2PI;
+            while (B < zero)
+                B += _2PI;
 
-            while (B.doubleValue() >= _2PI)
-                B = B.doubleValue() - _2PI;
+            while (B >= _2PI)
+                B -= _2PI;
 
         }
 
     }
 
-
     @Override
     public String format() {
 
-        return (C.intValue() == 0) ?
-                A.doubleValue() + ((B.doubleValue() >= 0D) ? "+" : "-") + "i" + Math.abs(B.doubleValue())
+        return (C == 0) ?
+                A + ((B >= zero) ? "+" : "-") + "i" + Math.abs(B)
             :
-                A.doubleValue() + "e^(i" + B.doubleValue() + ")";
+                A + "e^(i" + B + ")";
     
     }
 
+    @Override
+    public TYPE type() {
 
-    public int getForm() {
+        return type;
 
-        return C.intValue();
+    }
+
+    @Override
+    public Double A() {
+
+        return A;
+
+    }
+
+    @Override
+    public Double B() {
+
+        return B;
+
+    }
+
+    @Override
+    public Integer C() {
+
+        return C;
+
+    }
+
+    @Override
+    public ArrayList<Number> extended_data() {
+
+        return new ArrayList<Number>();
 
     }
 

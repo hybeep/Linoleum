@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 
-public class RingDirectSum {
+final public class RingDirectSum {
+
 
     ArrayList<RingNumber> entries;
+
 
     public RingDirectSum(ArrayList<RingNumber> entries) {
 
@@ -29,10 +31,9 @@ public class RingDirectSum {
     public RingDirectSum zero() {
         
         ArrayList<RingNumber> zero = new ArrayList<>();
-        Iterator<RingNumber> it = entries.iterator();
 
-        while (it.hasNext())
-            zero.add(it.next().zero());
+        for (RingNumber num : entries)
+            zero.add(num.zero());
 
         return new RingDirectSum(zero);
 
@@ -60,10 +61,9 @@ public class RingDirectSum {
     public RingDirectSum negative() {
 
         ArrayList<RingNumber> neg = new ArrayList<>();
-        Iterator<RingNumber> it = entries.iterator();
-
-        while(it.hasNext())
-            neg.add(it.next().negative());
+        
+        for (RingNumber num : entries)
+            neg.add(num.negative());
 
         return new RingDirectSum(neg);
 
@@ -80,10 +80,9 @@ public class RingDirectSum {
     public RingDirectSum times(int n) {
 
         ArrayList<RingNumber> prod = new ArrayList<>();
-        Iterator<RingNumber> it = entries.iterator();
-
-        while(it.hasNext())
-            prod.add(it.next().times(n));
+        
+        for (RingNumber num : entries)
+            prod.add(num.times(n));
 
         return new RingDirectSum(prod);
 
@@ -95,15 +94,15 @@ public class RingDirectSum {
         if (s.entries.size() != entries.size())
             throw new IncompatibleTypesException();
 
-        ArrayList<RingNumber> sum = new ArrayList<>();
+        ArrayList<RingNumber> prod = new ArrayList<>();
         
         int n = entries.size();
 
         int i;
         for (i = 0; i < n; i++)
-            sum.add(entries.get(i).times(s.entries.get(i)));
+            prod.add(entries.get(i).times(s.entries.get(i)));
 
-        return new RingDirectSum(sum);
+        return new RingDirectSum(prod);
         
     }    
 
@@ -113,8 +112,10 @@ public class RingDirectSum {
         boolean isZero = true;
         
         for (GroupNumber num : entries)
-            if (!num.isZero())
+            if (!num.isZero()) {
                 isZero = false;
+                break;
+            }
 
         return isZero;
 
@@ -147,6 +148,22 @@ public class RingDirectSum {
     public static RingDirectSum mult(RingDirectSum dirSum1, RingDirectSum dirSum2) {
 
         return dirSum1.times(dirSum2);
+
+    }
+
+
+    public static RingDirectSum mult(ArrayList<RingDirectSum> dirSums) {
+
+        if (dirSums.size() == 0)
+            throw new EmptyArrayException();
+
+        Iterator<RingDirectSum> it = dirSums.iterator();
+        RingDirectSum prod = it.next();
+
+        while(it.hasNext())
+            prod = prod.times(it.next());
+
+        return prod;
 
     }
 

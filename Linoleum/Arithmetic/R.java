@@ -1,72 +1,56 @@
 package Arithmetic;
 
+import java.util.ArrayList;
 
-public class R extends DivisionRingNumber {
-    
+final public class R extends DivisionRingNumber {
+
+    private TYPE type;
+    private Double A;
 
     private final Double zero = 0D;
     private final Double one = 1D;
 
-
     public R() {
 
-        this.type = GroupNumber.TYPE.REAL;
+        this.type = TYPE.REAL;
         this.A = zero;
-        this.B = 1;
-        this.C = 0;
 
     }
-
 
     public R(Double r) {
 
-        this.type = GroupNumber.TYPE.REAL;
+        this.type = TYPE.REAL;
         this.A = r;
-        this.B = 1;
-        this.C = 0;
 
     }
-
 
     public R(R s) {
 
-        this.type = GroupNumber.TYPE.REAL;
-        this.A = s.A.doubleValue();
-        this.B = 1;
-        this.C = 0;
+        this.type = TYPE.REAL;
+        this.A = s.A;
 
     }
-
 
     public R(Q s) {
 
-        this.type = GroupNumber.TYPE.REAL;
-        this.A = s.A.doubleValue() / s.B.doubleValue();
-        this.B = 1;
-        this.C = 0;
+        this.type = TYPE.REAL;
+        this.A = s.A().doubleValue() / s.B().doubleValue();
 
     }
-
 
     public R(Z n) {
 
-        this.type = GroupNumber.TYPE.REAL;
-        this.A = n.A.doubleValue();
-        this.B = 1;
-        this.C = 0;
+        this.type = TYPE.REAL;
+        this.A = n.A().doubleValue();
 
     }
 
+    public R(Element k) {
 
-    public R(GroupNumber k) {
-
-        this.type = GroupNumber.TYPE.REAL;
-        this.A = k.A.doubleValue();
-        this.B = 1;
-        this.C = 0;
+        this.type = TYPE.REAL;
+        this.A = k.A().doubleValue();
 
     }
-
 
     @Override
     public R zero() {
@@ -75,7 +59,6 @@ public class R extends DivisionRingNumber {
 
     }
 
-
     @Override
     public R identity() {
         
@@ -83,27 +66,19 @@ public class R extends DivisionRingNumber {
 
     }
 
-
     @Override
-    public DivisionRingNumber plus(GroupNumber s) {
+    public R plus(Summable s) {
 
+        switch (s.type()) {
 
-        switch (s.type) {
+            case TYPE.INTEGER:
+                return new R(A + s.A().doubleValue());
 
-            case GroupNumber.TYPE.INTEGER:
-                return new R(A.doubleValue() + s.A.doubleValue());
+            case TYPE.RATIONAL:
+                return new R(A + s.A().doubleValue() / s.B().doubleValue());
 
-            case GroupNumber.TYPE.RATIONAL:
-                return new R(s.A.doubleValue() / s.B.doubleValue() + A.doubleValue());
-
-            case GroupNumber.TYPE.REAL:
-                return new R(s.A.doubleValue() + A.doubleValue());
-
-            case GroupNumber.TYPE.COMPLEX:
-                C sComplex = new C(s);
-                C sPair = new C(sComplex, 0);
-                C sum = new C(sPair.A.doubleValue() + A.doubleValue(), sPair.B.doubleValue(), 0);
-                return new C(sum, sComplex.C.intValue());
+            case TYPE.REAL:
+                return new R(A + s.A().doubleValue());
 
             default:
                 throw new IncompatibleTypesException();
@@ -112,6 +87,17 @@ public class R extends DivisionRingNumber {
 
     }
 
+    @Override
+    public R plus(ArrayList<Summable> l) {
+
+        R sum = this;
+
+        for (Summable num : l)
+            sum = sum.plus(num);
+
+        return sum;
+
+    }
 
     @Override
     public R negative() {
@@ -120,26 +106,33 @@ public class R extends DivisionRingNumber {
 
     }
 
+    @Override
+    public R minus(Subtractable b) {
+
+        return plus(b.negative());
+
+    }
 
     @Override
-    public DivisionRingNumber times(RingNumber s) {
+    public R times(int n) {
 
-        switch (s.type) {
+        return new R(n * A);
 
-            case GroupNumber.TYPE.INTEGER:
-                return new R(A.doubleValue() * s.A.doubleValue());
+    }
 
-            case GroupNumber.TYPE.RATIONAL:
-                return new R(A.doubleValue() * s.A.doubleValue() / s.B.doubleValue());
+    @Override
+    public R times(Multipliable s) {
 
-            case GroupNumber.TYPE.REAL:
-                return new R(A.doubleValue() * s.A.doubleValue());
+        switch (s.type()) {
 
-            case GroupNumber.TYPE.COMPLEX:
-                C sComplex = new C(s);
-                C sPolar = new C(sComplex, 1);
-                C prod = new C(sPolar.A.doubleValue() * A.doubleValue(), sPolar.B.doubleValue(), 1);
-                return new C(prod, sComplex.C.intValue());
+            case TYPE.INTEGER:
+                return new R(A * s.A().doubleValue());
+
+            case TYPE.RATIONAL:
+                return new R(A * s.A().doubleValue() / s.B().doubleValue());
+
+            case TYPE.REAL:
+                return new R(A * s.A().doubleValue());
 
             default:
                 throw new IncompatibleTypesException();
@@ -148,14 +141,24 @@ public class R extends DivisionRingNumber {
         
     }
 
+    @Override
+    public R times(ArrayList<Multipliable> l) {
+
+        R prod = this;
+
+        for (Multipliable num : l)
+            prod = prod.times(num);
+
+        return prod;
+
+    }
 
     @Override
     public boolean isZero() {
 
-        return Double.compare(A.doubleValue(), zero) == 0;
+        return Double.compare(A, zero) == 0;
 
     }
-
 
     @Override
     public R inverse() {
@@ -167,6 +170,43 @@ public class R extends DivisionRingNumber {
 
     }
 
+    @Override
+    public R div(Invertible s) {
+
+        return times(s.inverse());
+
+    }
+
+    @Override
+    public R pow(int n) {
+
+        R s;
+
+        if (n == 0) {
+
+            s = identity();
+
+        } else if (n <= 0) {
+
+            s = inverse();
+            n = -n;
+
+        } else {
+
+            s = this;
+
+        }
+
+        R power = s;
+
+        int i;
+        for (i = 1; i < n; i++)
+            power = power.times(s);
+
+        return power;
+
+    }
+
 
     @Override
     public String format() {
@@ -175,12 +215,39 @@ public class R extends DivisionRingNumber {
 
     }
 
+    @Override
+    public TYPE type() {
 
-    public Double getR() {
-
-        return A.doubleValue();
+        return type;
 
     }
 
+    @Override
+    public Double A() {
+
+        return A;
+
+    }
+
+    @Override
+    public Double B() {
+
+        return one;
+
+    }
+
+    @Override
+    public Double C() {
+
+        return zero;
+
+    }
+
+    @Override
+    public ArrayList<Number> extended_data() {
+
+        return new ArrayList<Number>();
+
+    }
 
 }

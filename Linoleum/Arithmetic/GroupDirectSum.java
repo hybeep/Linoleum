@@ -1,47 +1,44 @@
 package Arithmetic;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
+final public class GroupDirectSum extends CompoundGroupNumber {
 
-public class GroupDirectSum {
-    
-
+    TYPE type;
+    Number A, B, C;
+    COMPOUND_TYPE compound_type;
     ArrayList<GroupNumber> entries;
-
 
     public GroupDirectSum(ArrayList<GroupNumber> entries) {
 
         if (entries.size() == 0)
             throw new EmptyArrayException();
         
+        this.type = entries.get(0).type();
+        this.A = 0;
+        this.B = 0;
+        this.C = 0;
+
+        this.compound_type = COMPOUND_TYPE.DIRECTSUM;
         this.entries = entries;
 
     }
 
-
     public GroupDirectSum(GroupDirectSum dirSum) {
 
+        this.type = entries.get(0).type;
+        this.A = 0;
+        this.B = 0;
+        this.C = 0;
+
+        this.compound_type = COMPOUND_TYPE.DIRECTSUM;
         this.entries = dirSum.entries;
 
     }
 
-
-    public GroupDirectSum zero() {
-        
-        ArrayList<GroupNumber> zero = new ArrayList<>();
-        Iterator<GroupNumber> it = entries.iterator();
-
-        while (it.hasNext())
-            zero.add(it.next().zero());
-
-        return new GroupDirectSum(zero);
-
-    }
-
-
-    public GroupDirectSum plus(GroupDirectSum s) {
+    @Override
+    public GroupDirectSum times(Multipliable s) {
         
         if (s.entries.size() != entries.size())
             throw new IncompatibleTypesException();
@@ -58,14 +55,25 @@ public class GroupDirectSum {
         
     }
 
+    @Override
+    public GroupDirectSum identity() {
+        
+        ArrayList<GroupNumber> one = new ArrayList<>();
+
+        for (GroupNumber num : entries)
+            one.add(num.identity());
+
+        return new GroupDirectSum(one);
+
+    }
+
 
     public GroupDirectSum negative() {
 
         ArrayList<GroupNumber> neg = new ArrayList<>();
-        Iterator<GroupNumber> it = entries.iterator();
 
-        while(it.hasNext())
-            neg.add(it.next().negative());
+        for (GroupNumber num : entries)
+            neg.add(num.negative());
 
         return new GroupDirectSum(neg);
 
@@ -82,10 +90,9 @@ public class GroupDirectSum {
     public GroupDirectSum times(int n) {
 
         ArrayList<GroupNumber> prod = new ArrayList<>();
-        Iterator<GroupNumber> it = entries.iterator();
 
-        while(it.hasNext())
-            prod.add(it.next().times(n));
+        for (GroupNumber num : entries)
+            prod.add(num.times(n));
 
         return new GroupDirectSum(prod);
 
@@ -97,8 +104,10 @@ public class GroupDirectSum {
         boolean isZero = true;
         
         for (GroupNumber num : entries)
-            if (!num.isZero())
+            if (!num.isZero()) {
                 isZero = false;
+                break;
+            }
 
         return isZero;
 
@@ -124,7 +133,6 @@ public class GroupDirectSum {
             sum = sum.plus(it.next());
 
         return sum;
-
 
     }
 

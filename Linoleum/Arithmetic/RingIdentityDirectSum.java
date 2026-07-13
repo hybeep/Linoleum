@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 
-public class RingIdentityDirectSum {
+final public class RingIdentityDirectSum {
 
 
-    ArrayList<RingIdentityNumber> entries;
+    ArrayList<IdentityRingNumber> entries;
 
 
-    public RingIdentityDirectSum(ArrayList<RingIdentityNumber> entries) {
+    public RingIdentityDirectSum(ArrayList<IdentityRingNumber> entries) {
 
         if (entries.size() == 0)
             throw new EmptyArrayException();
@@ -30,24 +30,22 @@ public class RingIdentityDirectSum {
 
     public RingIdentityDirectSum zero() {
         
-        ArrayList<RingIdentityNumber> zero = new ArrayList<>();
-        Iterator<RingIdentityNumber> it = entries.iterator();
-
-        while (it.hasNext())
-            zero.add(it.next().zero());
+        ArrayList<IdentityRingNumber> zero = new ArrayList<>();
+        
+        for (IdentityRingNumber num : entries)
+            zero.add(num.zero());
 
         return new RingIdentityDirectSum(zero);
 
     }
 
 
-    public RingIdentityDirectSum one() {
+    public RingIdentityDirectSum identity() {
         
-        ArrayList<RingIdentityNumber> one = new ArrayList<>();
-        Iterator<RingIdentityNumber> it = entries.iterator();
-
-        while (it.hasNext())
-            one.add(it.next().identity());
+        ArrayList<IdentityRingNumber> one = new ArrayList<>();
+        
+        for (IdentityRingNumber num : entries)
+            one.add(num.identity());
 
         return new RingIdentityDirectSum(one);
 
@@ -59,7 +57,7 @@ public class RingIdentityDirectSum {
         if (s.entries.size() != entries.size())
             throw new IncompatibleTypesException();
 
-        ArrayList<RingIdentityNumber> sum = new ArrayList<>();
+        ArrayList<IdentityRingNumber> sum = new ArrayList<>();
         
         int n = entries.size();
 
@@ -74,11 +72,10 @@ public class RingIdentityDirectSum {
 
     public RingIdentityDirectSum negative() {
 
-        ArrayList<RingIdentityNumber> neg = new ArrayList<>();
-        Iterator<RingIdentityNumber> it = entries.iterator();
-
-        while(it.hasNext())
-            neg.add(it.next().negative());
+        ArrayList<IdentityRingNumber> neg = new ArrayList<>();
+        
+        for (IdentityRingNumber num : entries)
+            neg.add(num.negative());
 
         return new RingIdentityDirectSum(neg);
 
@@ -94,11 +91,10 @@ public class RingIdentityDirectSum {
 
     public RingIdentityDirectSum times(int n) {
 
-        ArrayList<RingIdentityNumber> prod = new ArrayList<>();
-        Iterator<RingIdentityNumber> it = entries.iterator();
-
-        while(it.hasNext())
-            prod.add(it.next().times(n));
+        ArrayList<IdentityRingNumber> prod = new ArrayList<>();
+        
+        for (IdentityRingNumber num : entries)
+            prod.add(num.times(n));
 
         return new RingIdentityDirectSum(prod);
 
@@ -110,7 +106,7 @@ public class RingIdentityDirectSum {
         if (s.entries.size() != entries.size())
             throw new IncompatibleTypesException();
 
-        ArrayList<RingIdentityNumber> sum = new ArrayList<>();
+        ArrayList<IdentityRingNumber> sum = new ArrayList<>();
         
         int n = entries.size();
 
@@ -128,8 +124,10 @@ public class RingIdentityDirectSum {
         boolean isZero = true;
         
         for (GroupNumber num : entries)
-            if (!num.isZero())
+            if (!num.isZero()) {
                 isZero = false;
+                break;
+            }
 
         return isZero;
 

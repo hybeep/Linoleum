@@ -10,12 +10,15 @@ import Arithmetic.GroupNumber.TYPE;
 
 public abstract class ModuleNumber {
 
+
     TYPE type;
     MOD_TYPE mod_type;
+
 
     Number A, B, C;
     ArrayList<RingNumber> entries;
 
+    
     public static enum MOD_TYPE {
 
         POLYNOMIAL,

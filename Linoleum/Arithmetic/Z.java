@@ -1,53 +1,42 @@
 package Arithmetic;
 
+import java.util.ArrayList;
 
-public class Z extends RingIdentityNumber {
+final public class Z extends IdentityRingNumber {
 
+    private TYPE type;
+    private Long A;
 
     private final Long zero = 0L;
     private final Long one = 1L;
-    
-
 
     public Z() {
 
-        this.type = GroupNumber.TYPE.INTEGER;
+        this.type = TYPE.INTEGER;
         this.A = zero;
-        this.B = 1;
-        this.C = 0;
 
     }
-
 
     public Z(Long A) {
 
-        this.type = GroupNumber.TYPE.INTEGER;
+        this.type = TYPE.INTEGER;
         this.A = A;
-        this.B = 1;
-        this.C = 0;
 
     }
-
 
     public Z(Z m) {
 
-        this.type = GroupNumber.TYPE.INTEGER;
-        this.A = m.A.longValue();
-        this.B = 1;
-        this.C = 0;
+        this.type = TYPE.INTEGER;
+        this.A = m.A();
 
     }
 
+    public Z(Element k) {
 
-    public Z(GroupNumber k) {
-
-        this.type = GroupNumber.TYPE.INTEGER;
-        this.A = k.A.longValue();
-        this.B = 1;
-        this.C = 0;
+        this.type = TYPE.INTEGER;
+        this.A = k.A().longValue();
 
     }
-
 
     @Override
     public Z zero() {
@@ -63,39 +52,61 @@ public class Z extends RingIdentityNumber {
 
     }
 
-
     @Override
-    public Z plus(GroupNumber m) {
+    public Z plus(Summable m) {
 
-        switch (m.type) {
+        switch (m.type()) {
 
-            case GroupNumber.TYPE.INTEGER:
-                return new Z(A.longValue() + m.A.longValue());
+            case TYPE.INTEGER:
+                return new Z(A + m.A().longValue());
 
             default:
                 throw new IncompatibleTypesException();
 
         }
 
-
     }
 
+    @Override
+    public Z plus(ArrayList<Summable> l) {
+
+        Z sum = this;
+
+        for (Summable num : l)
+            sum = sum.plus(num);
+
+        return sum;
+
+    }
 
     @Override
     public Z negative() {
 
-        return new Z(-A.longValue());
+        return new Z(-A);
 
     }
 
+    @Override
+    public Z minus(Subtractable b) {
+
+        return plus(b.negative());
+
+    }
 
     @Override
-    public Z times(RingNumber m) {
+    public Z times(int n) {
 
-        switch (m.type) {
+        return new Z(n * A);
 
-            case GroupNumber.TYPE.INTEGER:
-                return new Z(A.longValue() * m.A.longValue());
+    }
+
+    @Override
+    public Z times(Multipliable m) {
+
+        switch (m.type()) {
+
+            case TYPE.INTEGER:
+                return new Z(A * m.A().longValue());
 
             default:
                 throw new IncompatibleTypesException();
@@ -104,28 +115,65 @@ public class Z extends RingIdentityNumber {
 
     }
 
+    @Override
+    public Z times(ArrayList<Multipliable> l) {
+
+        Z prod = this;
+
+        for (Multipliable num : l)
+            prod = prod.times(num);
+
+        return prod;
+
+    }
 
     @Override
     public boolean isZero() {
 
-        return Long.compare(A.longValue(), zero) == 0;
+        return Long.compare(A, zero) == 0;
 
     }
-
 
     @Override
     public String format() {
 
-        return "" + A.longValue();
+        return "" + A;
 
     }
 
+    @Override
+    public TYPE type() {
 
-    public Long getZ() {
-
-        return A.longValue();
+        return type;
 
     }
 
-   
+    @Override
+    public Long A() {
+
+        return A;
+
+    }
+
+    @Override
+    public Long B() {
+
+        return one;
+
+    }
+
+    @Override
+    public Long C() {
+
+        return zero;
+
+    }
+
+    @Override
+    public ArrayList<Number> extended_data() {
+
+        return new ArrayList<Number>();
+
+    }
+
 }
