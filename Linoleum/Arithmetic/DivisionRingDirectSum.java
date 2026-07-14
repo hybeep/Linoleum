@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 
-final public class DivisionRingDirectSum {
+final public class DivisionRingDirectSum<T extends DivisionRingNumber> extends CompoundDivisionRingNumber<T> {
 
 
     ArrayList<DivisionRingNumber> entries;

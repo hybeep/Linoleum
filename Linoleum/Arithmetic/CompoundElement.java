@@ -1,16 +1,17 @@
 package Arithmetic;
 
-public interface CompoundElement {
-    
-    TYPE type();
+import java.util.ArrayList;
 
+public interface CompoundElement<T extends Element> {
+
+    TYPE type();
     Number A();
     Number B();
-    Number C();
 
     COMPOUND_TYPE compound_type();
+    ArrayList<T> entries();
 
-    public String format();
-    public void print();
-
+    String format();
+    void print();
+    
 }

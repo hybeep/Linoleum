@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 final public class Q extends DivisionRingNumber {
 
-    private TYPE type;
     private Long A, B;
 
     private final Long zero = 0L;
@@ -12,15 +11,12 @@ final public class Q extends DivisionRingNumber {
 
     public Q() {
 
-        this.type = TYPE.RATIONAL;
         this.A = zero;
         this.B = one;
 
     }
 
     public Q(Long P, Long Q) {
-
-        this.type = TYPE.RATIONAL;
 
         if (Long.compare(Q, zero) == 0)
             throw new DivideByZeroException();
@@ -51,7 +47,6 @@ final public class Q extends DivisionRingNumber {
 
     public Q(Q r) {
 
-        this.type = TYPE.RATIONAL;
         this.A = r.A.longValue();
         this.B = r.B.longValue();
 
@@ -59,7 +54,6 @@ final public class Q extends DivisionRingNumber {
 
     public Q(Z n) {
 
-        this.type = TYPE.RATIONAL;
         this.A = n.A().longValue();
         this.B = one;
 
@@ -69,7 +63,6 @@ final public class Q extends DivisionRingNumber {
        
         Q i = new Q(k.A().longValue(), k.B().longValue());
         
-        this.type = TYPE.RATIONAL;
         this.A = i.A;
         this.B = i.B;
 
@@ -231,7 +224,7 @@ final public class Q extends DivisionRingNumber {
     @Override
     public TYPE type() {
 
-        return type;
+        return TYPE.RATIONAL;
 
     }
 

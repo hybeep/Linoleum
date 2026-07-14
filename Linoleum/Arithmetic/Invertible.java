@@ -1,7 +1,7 @@
 package Arithmetic;
 
-public interface Invertible {
+public interface Invertible extends Identity {
     
-    public Multipliable inverse();
+    Invertible inverse();
 
 }

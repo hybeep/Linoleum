@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 
-final public class RingDirectSum {
+final public class RingDirectSum<T extends RingNumber> extends CompoundRingNumber<T> {
 
 
     ArrayList<RingNumber> entries;

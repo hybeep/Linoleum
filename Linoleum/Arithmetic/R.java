@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 final public class R extends DivisionRingNumber {
 
-    private TYPE type;
     private Double A;
 
     private final Double zero = 0D;
@@ -12,42 +11,36 @@ final public class R extends DivisionRingNumber {
 
     public R() {
 
-        this.type = TYPE.REAL;
         this.A = zero;
 
     }
 
     public R(Double r) {
 
-        this.type = TYPE.REAL;
         this.A = r;
 
     }
 
     public R(R s) {
 
-        this.type = TYPE.REAL;
         this.A = s.A;
 
     }
 
     public R(Q s) {
 
-        this.type = TYPE.REAL;
         this.A = s.A().doubleValue() / s.B().doubleValue();
 
     }
 
     public R(Z n) {
 
-        this.type = TYPE.REAL;
         this.A = n.A().doubleValue();
 
     }
 
     public R(Element k) {
 
-        this.type = TYPE.REAL;
         this.A = k.A().doubleValue();
 
     }
@@ -218,7 +211,7 @@ final public class R extends DivisionRingNumber {
     @Override
     public TYPE type() {
 
-        return type;
+        return TYPE.REAL;
 
     }
 

@@ -1,11 +1,9 @@
 package Arithmetic;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
-final public class RingIdentityDirectSum {
+final public class RingIdentityDirectSum<T extends IdentityRingNumber> extends CompoundIdentityRingNumber<T> {
 
 
     ArrayList<IdentityRingNumber> entries;

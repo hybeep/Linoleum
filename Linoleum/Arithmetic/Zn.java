@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 final public class Zn extends IdentityRingNumber {
 
-    private TYPE type;
     private Long A, B;
 
     private Long zero = 0L;
@@ -12,7 +11,6 @@ final public class Zn extends IdentityRingNumber {
 
     public Zn(Long Z, Long N) {
 
-        this.type = TYPE.MODN;
         this.A = Z;
         this.B = N >= 0L ? N : -N;
         reduce();
@@ -21,7 +19,6 @@ final public class Zn extends IdentityRingNumber {
 
     public Zn(Zn c) {
 
-        this.type = TYPE.MODN;
         this.A = c.A;
         this.B = c.B;
 
@@ -31,7 +28,6 @@ final public class Zn extends IdentityRingNumber {
 
         Zn aZn = new Zn(a.A().longValue(), a.B().longValue());
         
-        this.type = TYPE.MODN;
         this.A = aZn.A.longValue();
         this.B = aZn.B.longValue();
 
@@ -107,7 +103,7 @@ final public class Zn extends IdentityRingNumber {
     @Override
     public Zn times(Multipliable c) {
 
-        if (c.type() != type || Long.compare(c.B().longValue(), B) != 0)
+        if (c.type() != TYPE.MODN || Long.compare(c.B().longValue(), B) != 0)
             throw new IncompatibleTypesException();
         
         return new Zn(A * c.A().longValue(), B);
@@ -143,7 +139,7 @@ final public class Zn extends IdentityRingNumber {
     @Override
     public TYPE type() {
 
-        return type;
+        return TYPE.MODN;
 
     }
     

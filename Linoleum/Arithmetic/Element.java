@@ -11,7 +11,7 @@ public interface Element {
 
     ArrayList<Number> extended_data();
 
-    public String format();
-    public void print();
+    String format();
+    void print();
     
 }

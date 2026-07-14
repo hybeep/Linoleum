@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public abstract class DivisionRingNumber extends IdentityRingNumber implements Invertible {
 
-@Override
+    @Override
     public abstract DivisionRingNumber plus(Summable b);
 
     @Override

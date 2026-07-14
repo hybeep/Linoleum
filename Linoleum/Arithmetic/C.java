@@ -7,7 +7,6 @@ final public class C extends DivisionRingNumber {
     //C is and integer, if it is 0 the number is an ordered pair A+iB 
     // else it is in polar representation Ae^iB
 
-    private TYPE type;
     private Double A, B;
     private int C;
 
@@ -16,7 +15,6 @@ final public class C extends DivisionRingNumber {
 
     public C() {
 
-        this.type = TYPE.COMPLEX;
         this.A = zero;
         this.B = zero;
         this.C = 0;
@@ -25,7 +23,6 @@ final public class C extends DivisionRingNumber {
 
     public C(Double A, Double B, int form) {
 
-        this.type = TYPE.COMPLEX;
         this.C = form;
         this.A = A;
         this.B = B;
@@ -51,7 +48,6 @@ final public class C extends DivisionRingNumber {
 
     public C(C z) {
 
-        this.type = TYPE.COMPLEX;
         this.C = (z.C == 0) ? 0 : 1;
         this.A = z.A;
         this.B = z.B;
@@ -60,14 +56,13 @@ final public class C extends DivisionRingNumber {
 
     public C(C z, int form) {
 
-        this.type = TYPE.COMPLEX;
         Double zA = z.A;
         Double zB = z.B;
         int zC = z.C;
 
         this.C = (form == 0) ? 0 : 1;
 
-        if ((form == 0 && zC == 0) || (form != 0 && zC != 0)) {
+        if (form == zC) {
 
             this.A = zA;
             this.B = zB;
@@ -88,7 +83,6 @@ final public class C extends DivisionRingNumber {
 
     public C(R r) {
 
-        this.type = TYPE.COMPLEX;
         this.A = r.A().doubleValue();
         this.B = zero;
         this.C = 0;
@@ -97,7 +91,6 @@ final public class C extends DivisionRingNumber {
 
     public C(Q r) {
 
-        this.type = TYPE.COMPLEX;
         this.A = r.A().doubleValue() / r.B().doubleValue();
         this.B = zero;
         this.C = 0;
@@ -106,7 +99,6 @@ final public class C extends DivisionRingNumber {
 
     public C(Z n) {
 
-        this.type = TYPE.COMPLEX;
         this.A = n.A().doubleValue();
         this.B = zero;
         this.C = 0;
@@ -115,7 +107,6 @@ final public class C extends DivisionRingNumber {
 
     public C(Element k) {
 
-        this.type = TYPE.COMPLEX;
         this.A = k.A().doubleValue();
         this.B = k.B().doubleValue();
         this.C = (k.C().intValue() == 0) ? 0 : 1;
@@ -205,7 +196,7 @@ final public class C extends DivisionRingNumber {
     @Override
     public C times(Multipliable w) {
 
-        C zPolar = new C(this, 0);
+        C zPolar = new C(this, 1);
 
         C prod;
         switch (w.type()) {
@@ -342,7 +333,7 @@ final public class C extends DivisionRingNumber {
     @Override
     public TYPE type() {
 
-        return type;
+        return TYPE.COMPLEX;
 
     }
 
@@ -373,6 +364,5 @@ final public class C extends DivisionRingNumber {
         return new ArrayList<Number>();
 
     }
-
 
 }

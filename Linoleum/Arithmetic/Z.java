@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 final public class Z extends IdentityRingNumber {
 
-    private TYPE type;
     private Long A;
 
     private final Long zero = 0L;
@@ -12,28 +11,24 @@ final public class Z extends IdentityRingNumber {
 
     public Z() {
 
-        this.type = TYPE.INTEGER;
         this.A = zero;
 
     }
 
     public Z(Long A) {
 
-        this.type = TYPE.INTEGER;
         this.A = A;
 
     }
 
     public Z(Z m) {
 
-        this.type = TYPE.INTEGER;
         this.A = m.A();
 
     }
 
     public Z(Element k) {
 
-        this.type = TYPE.INTEGER;
         this.A = k.A().longValue();
 
     }
@@ -144,7 +139,7 @@ final public class Z extends IdentityRingNumber {
     @Override
     public TYPE type() {
 
-        return type;
+        return TYPE.INTEGER;
 
     }
 

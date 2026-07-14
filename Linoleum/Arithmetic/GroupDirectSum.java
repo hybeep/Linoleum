@@ -3,102 +3,121 @@ package Arithmetic;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-final public class GroupDirectSum extends CompoundGroupNumber {
+final public class GroupDirectSum<T extends GroupNumber> extends CompoundGroupNumber<T> {
 
-    TYPE type;
-    Number A, B, C;
-    COMPOUND_TYPE compound_type;
-    ArrayList<GroupNumber> entries;
+    private int A;
 
-    public GroupDirectSum(ArrayList<GroupNumber> entries) {
+    private ArrayList<T> entries;
+
+    private int zero = 0;
+
+    public GroupDirectSum(ArrayList<T> entries) {
 
         if (entries.size() == 0)
             throw new EmptyArrayException();
         
-        this.type = entries.get(0).type();
-        this.A = 0;
-        this.B = 0;
-        this.C = 0;
-
-        this.compound_type = COMPOUND_TYPE.DIRECTSUM;
+        this.A = entries.size();
         this.entries = entries;
 
     }
 
-    public GroupDirectSum(GroupDirectSum dirSum) {
+    public GroupDirectSum(GroupDirectSum<T> dirSum) {
 
-        this.type = entries.get(0).type;
-        this.A = 0;
-        this.B = 0;
-        this.C = 0;
-
-        this.compound_type = COMPOUND_TYPE.DIRECTSUM;
+        this.A = dirSum.A;
         this.entries = dirSum.entries;
 
     }
 
+    public GroupDirectSum(CompoundElement<T> b) {
+
+        if (b.entries().size() == 0)
+            throw new EmptyArrayException();
+
+        this.A = b.entries().size();
+        this.entries = b.entries();
+
+    }
+
     @Override
-    public GroupDirectSum times(Multipliable s) {
-        
-        if (s.entries.size() != entries.size())
+    public GroupDirectSum<T> zero() {
+
+        ArrayList<T> zero = new ArrayList<T>();
+
+        for (T num : entries)
+            zero.add(num.zero());
+
+        return new GroupDirectSum<T>(zero);
+
+    }
+
+    @Override
+    public GroupDirectSum<T> plus(CompoundSummable<T> s) {
+
+        if (s.compound_type() != COMPOUND_TYPE.DIRECTSUM)
             throw new IncompatibleTypesException();
 
-        ArrayList<GroupNumber> sum = new ArrayList<>();
+        ArrayList<T> sum = new ArrayList<>();
+
+        Iterator<T> it = entries.iterator();
+        Iterator<T> sIt = s.entries().iterator();
+
+        while (it.hasNext() && sIt.hasNext())
+            sum.add(it.next().plus(sIt.next()));
         
-        int n = entries.size();
+        while (it.hasNext())
+            sum.add(it.next());
 
-        int i;
-        for (i = 0; i < n; i++)
-            sum.add(entries.get(i).plus(s.entries.get(i)));
+        while (sIt.hasNext())
+            sum.add(it.next());
 
-        return new GroupDirectSum(sum);
+        return new GroupDirectSum<T>(sum);
         
     }
 
     @Override
-    public GroupDirectSum identity() {
-        
-        ArrayList<GroupNumber> one = new ArrayList<>();
+    public GroupDirectSum<T> plus(ArrayList<CompoundSummable<T>> l) {
 
-        for (GroupNumber num : entries)
-            one.add(num.identity());
+        GroupDirectSum<T> sum = this;
 
-        return new GroupDirectSum(one);
+        for (CompoundSummable<T> num : l)
+            sum = sum.plus(num);
+
+        return sum;
 
     }
 
+    @Override
+    public GroupDirectSum<T> negative() {
 
-    public GroupDirectSum negative() {
+        ArrayList<T> neg = new ArrayList<>();
 
-        ArrayList<GroupNumber> neg = new ArrayList<>();
-
-        for (GroupNumber num : entries)
+        for (T num : entries)
             neg.add(num.negative());
 
-        return new GroupDirectSum(neg);
+        return new GroupDirectSum<T>(neg);
 
     }
 
-
-    public GroupDirectSum minus(GroupDirectSum dirSum) {
+    @Override
+    public GroupDirectSum<T> minus(CompoundSubtractable<T> dirSum) {
 
         return plus(dirSum.negative());
 
     }
 
+    @Override
+    public GroupDirectSum<T> times(int n) {
 
-    public GroupDirectSum times(int n) {
+        ArrayList<T> prod = new ArrayList<>();
 
-        ArrayList<GroupNumber> prod = new ArrayList<>();
-
-        for (GroupNumber num : entries)
+        for (T num : entries)
             prod.add(num.times(n));
 
-        return new GroupDirectSum(prod);
+        return new GroupDirectSum<T>(prod);
 
     }
 
-
+    @Override
     public boolean isZero() {
 
         boolean isZero = true;
@@ -113,28 +132,60 @@ final public class GroupDirectSum extends CompoundGroupNumber {
 
     }
 
+    @Override
+    public String format() {
 
-    public static GroupDirectSum sum(GroupDirectSum dirSum1, GroupDirectSum dirSum2) {
+        String s = "(";
 
-        return dirSum1.plus(dirSum2);
+        Iterator<T> it = entries.iterator();
+        while (it.hasNext()) {
 
-    }
+            s += it.next().format();
 
+            if (it.hasNext())
+                s += ", ";
 
-    public static GroupDirectSum sum(ArrayList<GroupDirectSum> dirSums) {
+        }
 
-        if (dirSums.size() == 0)
-            throw new EmptyArrayException();
+        s += ")";
 
-        Iterator<GroupDirectSum> it = dirSums.iterator();
-        GroupDirectSum sum = it.next();
-
-        while(it.hasNext())
-            sum = sum.plus(it.next());
-
-        return sum;
+        return s;
 
     }
 
+    @Override
+    public TYPE type() {
+
+        return TYPE.VARIOUS;
+
+    }
+
+    @Override
+    public Integer A() {
+
+        return A;
+
+    }
+
+    @Override
+    public Integer B() {
+
+        return zero;
+
+    }
+
+    @Override
+    public COMPOUND_TYPE compound_type() {
+
+        return COMPOUND_TYPE.DIRECTSUM;
+
+    }
+
+    @Override
+    public ArrayList<T> entries() {
+
+        return entries;
+
+    }
 
 }
