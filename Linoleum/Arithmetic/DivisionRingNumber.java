@@ -2,7 +2,7 @@ package Arithmetic;
 
 import java.util.ArrayList;
 
-public abstract class DivisionRingNumber extends IdentityRingNumber implements Invertible {
+public abstract class DivisionRingNumber implements Invertible {
 
     @Override
     public abstract DivisionRingNumber plus(Summable b);
@@ -16,10 +16,8 @@ public abstract class DivisionRingNumber extends IdentityRingNumber implements I
     @Override
     public abstract DivisionRingNumber negative();
 
-    @Override
     public abstract DivisionRingNumber minus(Subtractable b);
 
-    @Override
     public abstract DivisionRingNumber times(int n);
 
     @Override
@@ -37,5 +35,12 @@ public abstract class DivisionRingNumber extends IdentityRingNumber implements I
     public abstract DivisionRingNumber div(Invertible b);
 
     public abstract DivisionRingNumber pow(int n);
+
+    @Override
+    final public void print() {
+
+        System.out.println(format());
+
+    } 
     
 }

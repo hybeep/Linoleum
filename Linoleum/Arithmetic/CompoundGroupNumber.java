@@ -2,23 +2,26 @@ package Arithmetic;
 
 import java.util.ArrayList;
 
-public abstract class CompoundGroupNumber<T extends GroupNumber> implements CompoundSubtractable<T> {
+public abstract class CompoundGroupNumber implements CompoundSubtractable<GroupNumber> {
     
     @Override
-    public abstract CompoundGroupNumber<T> plus(CompoundSummable<T> b);
+    public abstract CompoundGroupNumber plus(CompoundSummable<GroupNumber> b);
 
     @Override
-    public abstract CompoundGroupNumber<T> plus(ArrayList<CompoundSummable<T>> l);
+    public abstract CompoundGroupNumber plus(ArrayList<CompoundSummable<GroupNumber>> l);
 
     @Override
-    public abstract CompoundGroupNumber<T> zero();
+    public abstract CompoundGroupNumber zero();
 
     @Override
-    public abstract CompoundGroupNumber<T> negative();
+    public abstract CompoundGroupNumber negative();
 
-    public abstract CompoundGroupNumber<T> minus(CompoundSubtractable<T> b);
+    public abstract CompoundGroupNumber minus(CompoundSubtractable<GroupNumber> b);
 
-    public abstract CompoundGroupNumber<T> times(int n);
+    public abstract CompoundGroupNumber times(int n);
+
+    @Override
+    public abstract ArrayList<GroupNumber> entries();
 
     @Override
     final public void print() {

@@ -2,30 +2,38 @@ package Arithmetic;
 
 import java.util.ArrayList;
 
-public abstract class CompoundRingNumber<T extends RingNumber> extends CompoundGroupNumber<T> implements CompoundMultipliable<T> {
+public abstract class CompoundRingNumber implements CompoundMultipliable<RingNumber> {
     
     @Override
-    public abstract CompoundRingNumber<T> plus(CompoundSummable<T> b);
+    public abstract CompoundRingNumber plus(CompoundSummable<RingNumber> b);
 
     @Override
-    public abstract CompoundRingNumber<T> plus(ArrayList<CompoundSummable<T>> l);
+    public abstract CompoundRingNumber plus(ArrayList<CompoundSummable<RingNumber>> l);
 
     @Override
-    public abstract CompoundRingNumber<T> zero();
+    public abstract CompoundRingNumber zero();
 
     @Override
-    public abstract CompoundRingNumber<T> negative();
+    public abstract CompoundRingNumber negative();
+
+    public abstract CompoundRingNumber minus(CompoundSubtractable<RingNumber> b);
+
+    public abstract CompoundRingNumber times(int n);
 
     @Override
-    public abstract CompoundRingNumber<T> minus(CompoundSubtractable<T> b);
+    public abstract CompoundRingNumber times(CompoundMultipliable<RingNumber> b);
 
     @Override
-    public abstract CompoundRingNumber<T> times(int n);
+    public abstract CompoundRingNumber times(ArrayList<CompoundMultipliable<RingNumber>> l);
 
     @Override
-    public abstract CompoundRingNumber<T> times(CompoundMultipliable<T> b);
+    public abstract ArrayList<RingNumber> entries();
 
     @Override
-    public abstract CompoundRingNumber<T> times(ArrayList<CompoundMultipliable<T>> l);
+    final public void print() {
 
+        System.out.println(format());
+
+    }
+    
 }

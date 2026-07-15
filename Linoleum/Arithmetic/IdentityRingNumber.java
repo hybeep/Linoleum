@@ -2,7 +2,7 @@ package Arithmetic;
 
 import java.util.ArrayList;
 
-public abstract class IdentityRingNumber extends RingNumber implements Identity {
+public abstract class IdentityRingNumber implements Identity {
 
     @Override
     public abstract IdentityRingNumber plus(Summable b);
@@ -16,10 +16,8 @@ public abstract class IdentityRingNumber extends RingNumber implements Identity 
     @Override
     public abstract IdentityRingNumber negative();
 
-    @Override
     public abstract IdentityRingNumber minus(Subtractable b);
 
-    @Override
     public abstract IdentityRingNumber times(int n);
 
     @Override
@@ -30,5 +28,12 @@ public abstract class IdentityRingNumber extends RingNumber implements Identity 
 
     @Override
     public abstract IdentityRingNumber identity();
+
+    @Override
+    final public void print() {
+
+        System.out.println(format());
+
+    }
 
 }

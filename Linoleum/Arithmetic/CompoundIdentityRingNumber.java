@@ -2,33 +2,41 @@ package Arithmetic;
 
 import java.util.ArrayList;
 
-public abstract class CompoundIdentityRingNumber<T extends IdentityRingNumber> extends CompoundRingNumber<T> implements CompoundIdentity<T> {
+public abstract class CompoundIdentityRingNumber implements CompoundIdentity<IdentityRingNumber> {
     
     @Override
-    public abstract CompoundIdentityRingNumber<T> plus(CompoundSummable<T> b);
+    public abstract CompoundIdentityRingNumber plus(CompoundSummable<IdentityRingNumber> b);
 
     @Override
-    public abstract CompoundIdentityRingNumber<T> plus(ArrayList<CompoundSummable<T>> l);
+    public abstract CompoundIdentityRingNumber plus(ArrayList<CompoundSummable<IdentityRingNumber>> l);
 
     @Override
-    public abstract CompoundIdentityRingNumber<T> zero();
+    public abstract CompoundIdentityRingNumber zero();
 
     @Override
-    public abstract CompoundIdentityRingNumber<T> negative();
+    public abstract CompoundIdentityRingNumber negative();
+
+    public abstract CompoundIdentityRingNumber minus(CompoundSubtractable<IdentityRingNumber> b);
+
+    public abstract CompoundIdentityRingNumber times(int n);
 
     @Override
-    public abstract CompoundIdentityRingNumber<T> minus(CompoundSubtractable<T> b);
-
-    @Override
-    public abstract CompoundIdentityRingNumber<T> times(int n);
-
-    @Override
-    public abstract CompoundIdentityRingNumber<T> times(CompoundMultipliable<T> b);
+    public abstract CompoundIdentityRingNumber times(CompoundMultipliable<IdentityRingNumber> b);
     
     @Override
-    public abstract CompoundIdentityRingNumber<T> times(ArrayList<CompoundMultipliable<T>> l);
+    public abstract CompoundIdentityRingNumber times(ArrayList<CompoundMultipliable<IdentityRingNumber>> l);
 
     @Override
-    public abstract CompoundIdentityRingNumber<T> identity();
+    public abstract CompoundIdentityRingNumber identity();
+
+    @Override
+    public abstract ArrayList<IdentityRingNumber> entries();
+
+    @Override
+    final public void print() {
+
+        System.out.println(format());
+
+    }
 
 }

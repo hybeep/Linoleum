@@ -2,40 +2,48 @@ package Arithmetic;
 
 import java.util.ArrayList;
 
-public abstract class CompoundDivisionRingNumber<T extends DivisionRingNumber> extends CompoundIdentityRingNumber<T> implements CompoundInvertible<T> {
+public abstract class CompoundDivisionRingNumber implements CompoundInvertible<DivisionRingNumber> {
 
     @Override
-    public abstract CompoundDivisionRingNumber<T> plus(CompoundSummable<T> b);
+    public abstract CompoundDivisionRingNumber plus(CompoundSummable<DivisionRingNumber> b);
 
     @Override
-    public abstract CompoundDivisionRingNumber<T> plus(ArrayList<CompoundSummable<T>> l);
+    public abstract CompoundDivisionRingNumber plus(ArrayList<CompoundSummable<DivisionRingNumber>> l);
 
     @Override
-    public abstract CompoundDivisionRingNumber<T> zero();
+    public abstract CompoundDivisionRingNumber zero();
 
     @Override
-    public abstract CompoundDivisionRingNumber<T> negative();
+    public abstract CompoundDivisionRingNumber negative();
+
+    public abstract CompoundDivisionRingNumber minus(CompoundSubtractable<DivisionRingNumber> b);
+
+    public abstract CompoundDivisionRingNumber times(int n);
 
     @Override
-    public abstract CompoundDivisionRingNumber<T> minus(CompoundSubtractable<T> b);
-
-    @Override
-    public abstract CompoundDivisionRingNumber<T> times(int n);
-
-    @Override
-    public abstract CompoundDivisionRingNumber<T> times(CompoundMultipliable<T> b);
+    public abstract CompoundDivisionRingNumber times(CompoundMultipliable<DivisionRingNumber> b);
     
     @Override
-    public abstract CompoundDivisionRingNumber<T> times(ArrayList<CompoundMultipliable<T>> l);
+    public abstract CompoundDivisionRingNumber times(ArrayList<CompoundMultipliable<DivisionRingNumber>> l);
 
     @Override
-    public abstract CompoundDivisionRingNumber<T> identity();
+    public abstract CompoundDivisionRingNumber identity();
 
     @Override
-    public abstract CompoundDivisionRingNumber<T> inverse();
+    public abstract CompoundDivisionRingNumber inverse();
 
-    public abstract CompoundDivisionRingNumber<T> div(CompoundInvertible<T> b);
+    public abstract CompoundDivisionRingNumber div(CompoundInvertible<DivisionRingNumber> b);
 
-    public abstract CompoundDivisionRingNumber<T> pow(int n);
+    public abstract CompoundDivisionRingNumber pow(int n);
+
+    @Override
+    public abstract ArrayList<DivisionRingNumber> entries();
+
+    @Override
+    final public void print() {
+
+        System.out.println(format());
+
+    }
     
 }
