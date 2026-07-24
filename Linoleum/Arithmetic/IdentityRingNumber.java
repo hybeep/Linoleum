@@ -16,8 +16,10 @@ public abstract class IdentityRingNumber implements Identity {
     @Override
     public abstract IdentityRingNumber negative();
 
+    @Override
     public abstract IdentityRingNumber minus(Subtractable b);
 
+    @Override
     public abstract IdentityRingNumber times(int n);
 
     @Override

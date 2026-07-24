@@ -1,4 +1,4 @@
-package Arithmetic.Expression;
+package Expression;
 
 public class InvalidNumberException extends RuntimeException {
     

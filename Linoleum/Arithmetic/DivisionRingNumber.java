@@ -16,8 +16,10 @@ public abstract class DivisionRingNumber implements Invertible {
     @Override
     public abstract DivisionRingNumber negative();
 
+    @Override
     public abstract DivisionRingNumber minus(Subtractable b);
 
+    @Override
     public abstract DivisionRingNumber times(int n);
 
     @Override
@@ -32,8 +34,10 @@ public abstract class DivisionRingNumber implements Invertible {
     @Override
     public abstract DivisionRingNumber inverse();
 
+    @Override
     public abstract DivisionRingNumber div(Invertible b);
 
+    @Override
     public abstract DivisionRingNumber pow(int n);
 
     @Override

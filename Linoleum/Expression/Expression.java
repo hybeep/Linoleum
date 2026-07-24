@@ -1,5 +1,4 @@
-package Arithmetic.Expression;
-
+package Expression;
 
 import DataStructures.BinaryTree;
 
@@ -8,7 +7,6 @@ import java.util.Arrays;
 import java.util.Stack;
 
 import java.util.regex.Pattern;
-
 
 public class Expression {
 

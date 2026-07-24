@@ -1,14 +1,9 @@
 package Arithmetic;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
-import Arithmetic.GroupNumber.TYPE;
-
-
-public abstract class ModuleNumber {
+public abstract class ModuleNumber implements CompoundSubtractActable<GroupNumber> {
 
 
     TYPE type;

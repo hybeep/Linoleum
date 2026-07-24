@@ -16,8 +16,10 @@ public abstract class GroupNumber implements Subtractable {
     @Override
     public abstract GroupNumber negative();
 
+    @Override
     public abstract GroupNumber minus(Subtractable b);
 
+    @Override
     public abstract GroupNumber times(int n);
 
     @Override

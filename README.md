@@ -45,9 +45,9 @@ The methods of these interfaces are:
 * Multipliable extends Subtractable
     * Multipliable *times(Multipliable)*
     * Multipliable *times(ArrayList \< Multipliable \> )*
-* Identity
+* Identity extends Multipliable
     * Identity *identity()*
-* Invertible
+* Invertible extends Identity
     * Invertible *inverse()*
     
 The abstract classes override the returning type of the interfaces methods to be the same class. Additionally, these have the following methods:
@@ -86,5 +86,13 @@ The interface CompoundElement \< T extends Element \> has the methods:
 * void *print()*
 
 The rest of the classes have the same methods as the 'simple' ones except for the returning type. The classes of these types are *GroupDirectSum* (CompoundGroupNumber), *RingDirectSum* (CompoundRingNumber), *IdentityRingDirectSum* (CompoundIdentityRingNumber), and *DivisionRingDirectSum* (CompoundDivisionRingNumber).
+
+
+## To-Do
+* The division ring *Zp* (Z modulo a prime number).
+* Modules over a ring and Algebras: define Action of a ring on a group and on another ring.
+* Matrices and polynomials (algebras) over an indentity ring. 
+* Transform *Compound* into 'simple', so that polynomials of matrices can be created, for example.
+* Finish Expression and Derivative
 
 

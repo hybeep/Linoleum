@@ -12,7 +12,7 @@ final public class Zn extends IdentityRingNumber {
     public Zn(Long Z, Long N) {
 
         this.A = Z;
-        this.B = N >= 0L ? N : -N;
+        this.B = N > 0L ? N : -N;
         reduce();
 
     }

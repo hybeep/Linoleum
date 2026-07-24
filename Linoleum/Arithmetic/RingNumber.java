@@ -16,8 +16,10 @@ public abstract class RingNumber implements Multipliable {
     @Override
     public abstract RingNumber negative();
 
+    @Override
     public abstract RingNumber minus(Subtractable b);
 
+    @Override
     public abstract RingNumber times(int n);
 
     @Override
