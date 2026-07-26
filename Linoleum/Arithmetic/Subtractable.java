@@ -14,11 +14,7 @@ public interface Subtractable extends Zero {
     Subtractable zero();
 
     Subtractable negative();
-
     Subtractable minus(Subtractable b);
-
     Subtractable times(int n);
 
-    
-    
 }

@@ -2,13 +2,13 @@ package Arithmetic;
 
 import java.util.ArrayList;
 
-public abstract class CompoundRingNumber implements CompoundMultipliable<RingNumber> {
+public abstract class CompoundRingNumber implements CompoundMultipliable<Multipliable> {
     
     @Override
-    public abstract CompoundRingNumber plus(CompoundSummable<RingNumber> b);
+    public abstract CompoundRingNumber plus(CompoundSummable<Multipliable> b);
 
     @Override
-    public abstract CompoundRingNumber plus(ArrayList<CompoundSummable<RingNumber>> l);
+    public abstract CompoundRingNumber plus(ArrayList<CompoundSummable<Multipliable>> l);
 
     @Override
     public abstract CompoundRingNumber zero();
@@ -16,18 +16,18 @@ public abstract class CompoundRingNumber implements CompoundMultipliable<RingNum
     @Override
     public abstract CompoundRingNumber negative();
 
-    public abstract CompoundRingNumber minus(CompoundSubtractable<RingNumber> b);
+    public abstract CompoundRingNumber minus(CompoundSubtractable<Multipliable> b);
 
     public abstract CompoundRingNumber times(int n);
 
     @Override
-    public abstract CompoundRingNumber times(CompoundMultipliable<RingNumber> b);
+    public abstract CompoundRingNumber times(CompoundMultipliable<Multipliable> b);
 
     @Override
-    public abstract CompoundRingNumber times(ArrayList<CompoundMultipliable<RingNumber>> l);
+    public abstract CompoundRingNumber times(ArrayList<CompoundMultipliable<Multipliable>> l);
 
     @Override
-    public abstract ArrayList<RingNumber> entries();
+    public abstract ArrayList<Multipliable> entries();
 
     @Override
     final public void print() {

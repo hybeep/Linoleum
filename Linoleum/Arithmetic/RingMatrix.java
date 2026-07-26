@@ -3,14 +3,13 @@ package Arithmetic;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class RingMatrix {
+public class RingMatrix extends CompoundAlgebraNumber {
     
+    private TYPE type;
+    private Integer M, N; //M rows, N cols
+    private ArrayList<Multipliable> entries;
 
-    private String TYPE;
-    private int M, N; //M rows, N cols
-    private ArrayList<RingNumber> entries;
-
-    public RingMatrix(ArrayList<RingNumber> nums, int M, int N) {
+    public RingMatrix(ArrayList<Multipliable> nums, int M, int N) {
 
         if (M <= 0 || N <= 0)
             throw new InvalidMatrixSizeException();
@@ -18,9 +17,11 @@ public class RingMatrix {
         if (nums.size() == 0)
             throw new EmptyArrayException();
 
-        this.TYPE = nums.get(0).getType();
+        this.type = nums.get(0).type();
+        this.M = M;
+        this.N = N;
 
-        Iterator<RingNumber> it = nums.iterator();
+        Iterator<Multipliable> it = nums.iterator();
 
         int size = M * N;
 
@@ -30,12 +31,12 @@ public class RingMatrix {
 
             if (it.hasNext()) {
 
-                RingNumber next = it.next();
+                Multipliable next = it.next();
 
-                if (next.getType() != TYPE)
+                if (next.type() != type)
                     throw new IncompatibleTypesException();
 
-                this.entries.add(it.next());
+                this.entries.add(next);
 
             } else {
 
@@ -47,22 +48,9 @@ public class RingMatrix {
 
     }
 
-
-    public RingMatrix negative() {
-
-        ArrayList<RingNumber> neg = new ArrayList<>();
-
-        for(RingNumber num : entries)
-            neg.add(num.negative());
-
-        return new RingMatrix(neg, M, N);
-
-    }
-
-
     public RingMatrix transpose() {
 
-        ArrayList<RingNumber> trans = new ArrayList<>();
+        ArrayList<Multipliable> trans = new ArrayList<>();
 
         int i, j;
 
@@ -80,61 +68,118 @@ public class RingMatrix {
 
     }
 
+    @Override
+    public RingMatrix plus(CompoundSummable<Multipliable> b) {
 
-    public RingMatrix plus(RingMatrix mat) {
+        if (b.compound_type() != compound_type())
+            throw new IncompatibleCompoundTypesException();
 
-        if (mat.TYPE != TYPE)
+        if (b.type() != type)
             throw new IncompatibleTypesException();
 
-        if (mat.N != N || mat.M != M)
-            throw new InvalidMatrixSizeException();
+        if (b.A() != M || b.B() != N)
+            throw new InvalidMatrixSizesException();
             
-        ArrayList<RingNumber> sum = new ArrayList<>();
+        ArrayList<Multipliable> sum = new ArrayList<>();
+        ArrayList<Multipliable> bEntries = b.entries();
 
         int size = M * N;
 
         int i;
         for (i = 0; i < size; i++)
-            sum.add(entries.get(i).plus(mat.entries.get(i)));
+            sum.add(entries.get(i).plus(bEntries.get(i)));
 
         return new RingMatrix(sum, M, N);
 
     }
 
+    @Override
+    public RingMatrix plus(ArrayList<CompoundSummable<Multipliable>> l) {
+        
+        RingMatrix sum = this;
 
-    public RingMatrix minus(RingMatrix mat) {
+        for (CompoundSummable<Multipliable> mat : l)
+            sum = sum.plus(mat);
 
-        return plus(mat.negative());
-
-    }
-
-
-    public RingMatrix times(RingNumber r) {
-
-        if (r.getType() != TYPE)
-            throw new IncompatibleTypesException();
-
-        ArrayList<RingNumber> prod = new ArrayList<>();
-
-        for (RingNumber num : entries)
-            prod.add(r.times(num));
-
-        return new RingMatrix(prod, M, N);
+        return sum;
 
     }
 
+    @Override
+    public RingMatrix zero() {
 
-    public RingMatrix times(RingMatrix mat) {
+        ArrayList<Multipliable> zero = new ArrayList<>();
 
-        if (mat.TYPE != TYPE)
+        for (Multipliable num : entries)
+            zero.add(num.zero());
+
+        return new RingMatrix(zero, M, N);
+
+    }
+
+    @Override
+    public boolean isZero() {
+
+        boolean isZero = true;
+
+        for (Multipliable num : entries)
+            if (!num.isZero()) {
+                isZero = false;
+                break;
+            }
+
+        return isZero;
+
+    }
+
+    @Override
+    public RingMatrix negative() {
+
+        ArrayList<Multipliable> neg = new ArrayList<>();
+
+        for(Multipliable num : entries)
+            neg.add(num.negative());
+
+        return new RingMatrix(neg, M, N);
+
+    }
+
+    @Override
+    public RingMatrix minus(CompoundSubtractable<Multipliable> b) {
+
+        return plus(b.negative());
+
+    }
+
+    @Override
+    public RingMatrix times(int n) {
+
+        ArrayList<Multipliable> mult = new ArrayList<>();
+
+        for (Multipliable num : entries)
+            mult.add(num.times(n));
+
+        return new RingMatrix(mult, M, N);
+
+    }
+
+    @Override
+    public RingMatrix times(CompoundMultipliable<Multipliable> b) {
+
+        if (b.compound_type() != compound_type())
+            throw new IncompatibleCompoundTypesException();
+
+        if (b.type() != type)
             throw new IncompatibleTypesException();
 
-        if (mat.M != N)
-            throw new InvalidMatrixSizeException();
+        if (b.A() != N)
+            throw new InvalidMatrixSizesException();
 
-        ArrayList<RingNumber> prod = new ArrayList<>();
-
-        RingMatrix matTrans = mat.transpose();
+        RingMatrix bMat = new RingMatrix(b.entries(), b.A().intValue(), b.B().intValue());
+        RingMatrix matTrans = bMat.transpose();
+        
+        ArrayList<Multipliable> prod = new ArrayList<>();
+        ArrayList<Multipliable> matTEntries = matTrans.entries();
 
         int i, j, k;
 
@@ -142,7 +187,7 @@ public class RingMatrix {
 
             for (j = 0; j < matTrans.M; j++) {
 
-                RingNumber prod_ij = entries.get(i * N).times(matTrans.entries.get(j * N));
+                Multipliable prod_ij = entries.get(i * N).times(matTEntries.get(j * N));
 
                 for (k = 1; k < N; k++) {
 
@@ -156,59 +201,100 @@ public class RingMatrix {
 
         }
 
-        return new RingMatrix(prod, M, mat.N);
+        return new RingMatrix(prod, M, bMat.N);
 
     }
 
-
-    public static RingMatrix sum(RingMatrix mat1, RingMatrix mat2) {
-
-        return mat1.plus(mat2);
-
-    }
-
-
-    public static RingMatrix sum(ArrayList<RingMatrix> matrices) {
-
-        if (matrices.size() == 0)
-            throw new EmptyArrayException();
-
+    @Override
+    public RingMatrix times(ArrayList<CompoundMultipliable<Multipliable>> l) {
         
-        Iterator<RingMatrix> it = matrices.iterator();
+        RingMatrix mult = this;
 
-        RingMatrix sum = it.next();
-
-        while(it.hasNext())
-            sum = sum.plus(it.next());
-
-        return sum;
-
-    }
-
-
-    public static RingMatrix mult(RingMatrix mat1, RingMatrix mat2) {
-
-        return mat1.times(mat2);
-
-    }
-
-
-    public static RingMatrix mult(ArrayList<RingMatrix> matrices) {
-
-        if (matrices.size() == 0)
-            throw new EmptyArrayException();
-
-        
-        Iterator<RingMatrix> it = matrices.iterator();
-
-        RingMatrix mult = it.next();
-
-        while(it.hasNext())
-            mult = mult.times(it.next());
+        for (CompoundMultipliable<Multipliable> mat : l)
+            mult = mult.times(mat);
 
         return mult;
 
     }
 
+    @Override
+    public RingMatrix action(Multipliable b) {
+
+        ArrayList<Multipliable> mult = new ArrayList<>();
+
+        for (Multipliable num : entries)
+            mult.add(num.times(b));
+
+        return new RingMatrix(mult, M, N);
+
+    }
+
+    @Override
+    public TYPE type() {
+
+        return this.type;
+
+    }
+
+    @Override
+    public Number A() {
+
+        return this.M;
+
+    }
+
+    @Override
+    public Number B() {
+
+        return this.N;
+
+    }
+
+    @Override
+    public COMPOUND_TYPE compound_type() {
+
+        return COMPOUND_TYPE.MATRIX;
+
+    }
+
+    @Override
+    public ArrayList<Multipliable> entries() {
+
+        return this.entries;
+
+    }
+
+    @Override
+    public String format() {
+
+        ArrayList<String> matStr = new ArrayList<>();
+
+        for (Multipliable num : entries)
+            matStr.add(num.format());
+
+        int maxLength = 0;
+        for (String s : matStr)
+            if (s.length() > maxLength)
+                maxLength = s.length();
+
+        String format = "%" + maxLength + "." + maxLength + "s";
+        String matFormat = "";
+        int i, j;
+        for (i = 0; i < M; i++) {
+
+            for (j = 0; j < N; j++) {
+
+                matFormat += String.format(format, matStr.get(i * N + j));
+                matFormat += " ";
+
+            }
+
+            matFormat += "\n";
+
+        }
+
+        return matFormat;
+
+    }
 
 }

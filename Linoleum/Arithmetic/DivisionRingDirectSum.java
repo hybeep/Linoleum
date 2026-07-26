@@ -9,11 +9,11 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
 
     private int A;
 
-    private ArrayList<DivisionRingNumber> entries;
+    private ArrayList<Invertible> entries;
 
     private int zero = 0;
 
-    public DivisionRingDirectSum(ArrayList<DivisionRingNumber> entries) {
+    public DivisionRingDirectSum(ArrayList<Invertible> entries) {
 
         if (entries.size() == 0)
             throw new EmptyArrayException();
@@ -30,7 +30,7 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
 
     }
 
-    public DivisionRingDirectSum(CompoundElement<DivisionRingNumber> b) {
+    public DivisionRingDirectSum(CompoundElement<Invertible> b) {
 
         if (b.entries().size() == 0)
             throw new EmptyArrayException();
@@ -43,9 +43,9 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     @Override
     public DivisionRingDirectSum zero() {
         
-        ArrayList<DivisionRingNumber> zero = new ArrayList<>();
+        ArrayList<Invertible> zero = new ArrayList<>();
 
-        for (DivisionRingNumber num : entries)
+        for (Invertible num : entries)
             zero.add(num.zero());
 
         return new DivisionRingDirectSum(zero);
@@ -55,9 +55,9 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     @Override
     public DivisionRingDirectSum identity() {
         
-        ArrayList<DivisionRingNumber> one = new ArrayList<>();
+        ArrayList<Invertible> one = new ArrayList<>();
 
-        for (DivisionRingNumber num : entries)
+        for (Invertible num : entries)
             one.add(num.identity());
 
         return new DivisionRingDirectSum(one);
@@ -65,15 +65,15 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     }
 
     @Override
-    public DivisionRingDirectSum plus(CompoundSummable<DivisionRingNumber> s) {
+    public DivisionRingDirectSum plus(CompoundSummable<Invertible> s) {
 
         if (s.compound_type() != COMPOUND_TYPE.DIRECTSUM)
             throw new IncompatibleTypesException();
 
-        ArrayList<DivisionRingNumber> sum = new ArrayList<>();
+        ArrayList<Invertible> sum = new ArrayList<>();
 
-        Iterator<DivisionRingNumber> it = entries.iterator();
-        Iterator<DivisionRingNumber> sIt = s.entries().iterator();
+        Iterator<Invertible> it = entries.iterator();
+        Iterator<Invertible> sIt = s.entries().iterator();
 
         while (it.hasNext() && sIt.hasNext())
             sum.add(it.next().plus(sIt.next()));
@@ -89,11 +89,11 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     }
 
     @Override
-    public DivisionRingDirectSum plus(ArrayList<CompoundSummable<DivisionRingNumber>> l) {
+    public DivisionRingDirectSum plus(ArrayList<CompoundSummable<Invertible>> l) {
 
         DivisionRingDirectSum sum = this;
 
-        for (CompoundSummable<DivisionRingNumber> num : l)
+        for (CompoundSummable<Invertible> num : l)
             sum = sum.plus(num);
 
         return sum;
@@ -103,9 +103,9 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     @Override
     public DivisionRingDirectSum negative() {
 
-        ArrayList<DivisionRingNumber> neg = new ArrayList<>();
+        ArrayList<Invertible> neg = new ArrayList<>();
         
-        for (DivisionRingNumber num : entries)
+        for (Invertible num : entries)
             neg.add(num.negative());
 
         return new DivisionRingDirectSum(neg);
@@ -113,7 +113,7 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     }
 
     @Override
-    public DivisionRingDirectSum minus(CompoundSubtractable<DivisionRingNumber> dirSum) {
+    public DivisionRingDirectSum minus(CompoundSubtractable<Invertible> dirSum) {
 
         return plus(dirSum.negative());
 
@@ -122,9 +122,9 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     @Override
     public DivisionRingDirectSum times(int n) {
 
-        ArrayList<DivisionRingNumber> prod = new ArrayList<>();
+        ArrayList<Invertible> prod = new ArrayList<>();
         
-        for (DivisionRingNumber num : entries)
+        for (Invertible num : entries)
             prod.add(num.times(n));
 
         return new DivisionRingDirectSum(prod);
@@ -132,15 +132,15 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     }
 
     @Override
-    public DivisionRingDirectSum times(CompoundMultipliable<DivisionRingNumber> s) {
+    public DivisionRingDirectSum times(CompoundMultipliable<Invertible> s) {
         
         if (s.compound_type() != COMPOUND_TYPE.DIRECTSUM)
             throw new IncompatibleTypesException();
 
-        ArrayList<DivisionRingNumber> prod = new ArrayList<>();
+        ArrayList<Invertible> prod = new ArrayList<>();
 
-        Iterator<DivisionRingNumber> it = entries.iterator();
-        Iterator<DivisionRingNumber> sIt = s.entries().iterator();
+        Iterator<Invertible> it = entries.iterator();
+        Iterator<Invertible> sIt = s.entries().iterator();
 
         while (it.hasNext() && sIt.hasNext())
             prod.add(it.next().times(sIt.next()));
@@ -156,11 +156,11 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     }    
 
     @Override
-    public DivisionRingDirectSum times(ArrayList<CompoundMultipliable<DivisionRingNumber>> l) {
+    public DivisionRingDirectSum times(ArrayList<CompoundMultipliable<Invertible>> l) {
 
         DivisionRingDirectSum prod = this;
 
-        for (CompoundMultipliable<DivisionRingNumber> num : l)
+        for (CompoundMultipliable<Invertible> num : l)
             prod = prod.times(num);
 
         return prod;
@@ -170,9 +170,9 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     @Override
     public CompoundDivisionRingNumber inverse() {
 
-        ArrayList<DivisionRingNumber> inv = new ArrayList<>();
+        ArrayList<Invertible> inv = new ArrayList<>();
         
-        for (DivisionRingNumber num : entries)
+        for (Invertible num : entries)
             inv.add(num.inverse());
 
         return new DivisionRingDirectSum(inv);
@@ -180,7 +180,7 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     }
 
     @Override 
-    public CompoundDivisionRingNumber div(CompoundInvertible<DivisionRingNumber> b) {
+    public CompoundDivisionRingNumber div(CompoundInvertible<Invertible> b) {
 
         return times(b.inverse());
 
@@ -189,9 +189,9 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     @Override
     public DivisionRingDirectSum pow(int n) {
 
-        ArrayList<DivisionRingNumber> power = new ArrayList<>();
+        ArrayList<Invertible> power = new ArrayList<>();
         
-        for (DivisionRingNumber num : entries)
+        for (Invertible num : entries)
             power.add(num.pow(n));
 
         return new DivisionRingDirectSum(power);
@@ -203,7 +203,7 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
 
         boolean isZero = true;
         
-        for (DivisionRingNumber num : entries)
+        for (Invertible num : entries)
             if (!num.isZero()) {
                 isZero = false;
                 break;
@@ -218,7 +218,7 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
 
         String s = "(";
 
-        Iterator<DivisionRingNumber> it = entries.iterator();
+        Iterator<Invertible> it = entries.iterator();
         while (it.hasNext()) {
 
             s += it.next().format();
@@ -263,7 +263,7 @@ final public class DivisionRingDirectSum extends CompoundDivisionRingNumber {
     }
 
     @Override
-    public ArrayList<DivisionRingNumber> entries() {
+    public ArrayList<Invertible> entries() {
 
         return entries;
 

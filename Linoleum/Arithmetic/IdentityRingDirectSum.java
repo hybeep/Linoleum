@@ -7,11 +7,11 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
 
     private int A;
 
-    private ArrayList<IdentityRingNumber> entries;
+    private ArrayList<Identity> entries;
 
     private int zero = 0;
 
-    public IdentityRingDirectSum(ArrayList<IdentityRingNumber> entries) {
+    public IdentityRingDirectSum(ArrayList<Identity> entries) {
 
         if (entries.size() == 0)
             throw new EmptyArrayException();
@@ -28,7 +28,7 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
 
     }
 
-    public IdentityRingDirectSum(CompoundElement<IdentityRingNumber> b) {
+    public IdentityRingDirectSum(CompoundElement<Identity> b) {
 
         if (b.entries().size() == 0)
             throw new EmptyArrayException();
@@ -41,9 +41,9 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     @Override
     public IdentityRingDirectSum zero() {
         
-        ArrayList<IdentityRingNumber> zero = new ArrayList<>();
+        ArrayList<Identity> zero = new ArrayList<>();
 
-        for (IdentityRingNumber num : entries)
+        for (Identity num : entries)
             zero.add(num.zero());
 
         return new IdentityRingDirectSum(zero);
@@ -53,9 +53,9 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     @Override
     public IdentityRingDirectSum identity() {
         
-        ArrayList<IdentityRingNumber> one = new ArrayList<>();
+        ArrayList<Identity> one = new ArrayList<>();
 
-        for (IdentityRingNumber num : entries)
+        for (Identity num : entries)
             one.add(num.identity());
 
         return new IdentityRingDirectSum(one);
@@ -63,15 +63,15 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     }
 
     @Override
-    public IdentityRingDirectSum plus(CompoundSummable<IdentityRingNumber> s) {
+    public IdentityRingDirectSum plus(CompoundSummable<Identity> s) {
 
         if (s.compound_type() != COMPOUND_TYPE.DIRECTSUM)
             throw new IncompatibleTypesException();
 
-        ArrayList<IdentityRingNumber> sum = new ArrayList<>();
+        ArrayList<Identity> sum = new ArrayList<>();
 
-        Iterator<IdentityRingNumber> it = entries.iterator();
-        Iterator<IdentityRingNumber> sIt = s.entries().iterator();
+        Iterator<Identity> it = entries.iterator();
+        Iterator<Identity> sIt = s.entries().iterator();
 
         while (it.hasNext() && sIt.hasNext())
             sum.add(it.next().plus(sIt.next()));
@@ -87,11 +87,11 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     }
 
     @Override
-    public IdentityRingDirectSum plus(ArrayList<CompoundSummable<IdentityRingNumber>> l) {
+    public IdentityRingDirectSum plus(ArrayList<CompoundSummable<Identity>> l) {
 
         IdentityRingDirectSum sum = this;
 
-        for (CompoundSummable<IdentityRingNumber> num : l)
+        for (CompoundSummable<Identity> num : l)
             sum = sum.plus(num);
 
         return sum;
@@ -101,9 +101,9 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     @Override
     public IdentityRingDirectSum negative() {
 
-        ArrayList<IdentityRingNumber> neg = new ArrayList<>();
+        ArrayList<Identity> neg = new ArrayList<>();
         
-        for (IdentityRingNumber num : entries)
+        for (Identity num : entries)
             neg.add(num.negative());
 
         return new IdentityRingDirectSum(neg);
@@ -111,7 +111,7 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     }
 
     @Override
-    public IdentityRingDirectSum minus(CompoundSubtractable<IdentityRingNumber> dirSum) {
+    public IdentityRingDirectSum minus(CompoundSubtractable<Identity> dirSum) {
 
         return plus(dirSum.negative());
 
@@ -120,9 +120,9 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     @Override
     public IdentityRingDirectSum times(int n) {
 
-        ArrayList<IdentityRingNumber> prod = new ArrayList<>();
+        ArrayList<Identity> prod = new ArrayList<>();
         
-        for (IdentityRingNumber num : entries)
+        for (Identity num : entries)
             prod.add(num.times(n));
 
         return new IdentityRingDirectSum(prod);
@@ -130,15 +130,15 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     }
 
     @Override
-    public IdentityRingDirectSum times(CompoundMultipliable<IdentityRingNumber> s) {
+    public IdentityRingDirectSum times(CompoundMultipliable<Identity> s) {
         
         if (s.compound_type() != COMPOUND_TYPE.DIRECTSUM)
             throw new IncompatibleTypesException();
 
-        ArrayList<IdentityRingNumber> prod = new ArrayList<>();
+        ArrayList<Identity> prod = new ArrayList<>();
 
-        Iterator<IdentityRingNumber> it = entries.iterator();
-        Iterator<IdentityRingNumber> sIt = s.entries().iterator();
+        Iterator<Identity> it = entries.iterator();
+        Iterator<Identity> sIt = s.entries().iterator();
 
         while (it.hasNext() && sIt.hasNext())
             prod.add(it.next().times(sIt.next()));
@@ -154,11 +154,11 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     }    
 
     @Override
-    public IdentityRingDirectSum times(ArrayList<CompoundMultipliable<IdentityRingNumber>> l) {
+    public IdentityRingDirectSum times(ArrayList<CompoundMultipliable<Identity>> l) {
 
         IdentityRingDirectSum prod = this;
 
-        for (CompoundMultipliable<IdentityRingNumber> num : l)
+        for (CompoundMultipliable<Identity> num : l)
             prod = prod.times(num);
 
         return prod;
@@ -170,7 +170,7 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
 
         boolean isZero = true;
         
-        for (IdentityRingNumber num : entries)
+        for (Identity num : entries)
             if (!num.isZero()) {
                 isZero = false;
                 break;
@@ -185,7 +185,7 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
 
         String s = "(";
 
-        Iterator<IdentityRingNumber> it = entries.iterator();
+        Iterator<Identity> it = entries.iterator();
         while (it.hasNext()) {
 
             s += it.next().format();
@@ -230,7 +230,7 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     }
 
     @Override
-    public ArrayList<IdentityRingNumber> entries() {
+    public ArrayList<Identity> entries() {
 
         return entries;
 
