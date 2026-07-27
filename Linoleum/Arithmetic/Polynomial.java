@@ -1,39 +1,35 @@
 package Arithmetic;
 
-
-import Arithmetic.GroupNumber.TYPE;
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+public class Polynomial extends CompoundAlgebraNumber {
 
-public class Polynomial<T extends RingNumber> {
+    private TYPE type;
+    private ArrayList<Multipliable> coefficients;
+    private int dgr;
 
-
-    private ArrayList<RingNumber> coefficients;
-    private int degree;
-
-
-    public Polynomial(ArrayList<T> coefficients) {
+    public Polynomial(ArrayList<Multipliable> coefficients) {
 
         if (coefficients.size() == 0)
             throw new EmptyArrayException();
 
-
         Collections.reverse(coefficients);
+        this.type = coefficients.get(0).type();
 
-        Iterator<T> it = coefficients.iterator();
-
-        ArrayList<RingNumber> polRev = new ArrayList<>();
+        Iterator<Multipliable> it = coefficients.iterator();
+        ArrayList<Multipliable> polRev = new ArrayList<>();
 
         boolean s = true;
-        T next;
+        Multipliable next;
 
         while(it.hasNext()) {
 
             next = it.next();
+
+            if (next.type() != type())
+                throw new IncompatibleTypesException();
 
             if (s) {
 
@@ -59,62 +55,51 @@ public class Polynomial<T extends RingNumber> {
         Collections.reverse(polRev);
         
         this.coefficients = polRev;
-        this.degree =  s ? -1 : polRev.size() - 1;
+        this.dgr =  s ? -1 : polRev.size() - 1;
 
     }
 
+    public Polynomial(Polynomial b) {
 
-    public Polynomial(Polynomial<T> polynomial) {
-
-        this.coefficients = new ArrayList<>();
-        for (RingNumber num : polynomial.coefficients)
-            this.coefficients.add(num);
-
-        this.degree = polynomial.degree;
+        this.type = b.type;
+        this.coefficients = b.coefficients;
+        this.dgr = b.dgr;
 
     }
 
+    @Override
+    public Polynomial plus(CompoundSummable<Multipliable> b) {
 
-    public Polynomial<T> negative() {
+        if (b.compound_type() != compound_type())
+            throw new IncompatibleCompoundTypesException();
 
-        ArrayList<T> neg = new ArrayList<>();
-
-        for (T num : coefficients)
-            neg.add(num.negative());
-
-        return new Polynomial(neg);
-
-    }
-
-
-    public Polynomial plus(Polynomial polynomial) {
-
-        if (polynomial.TYPE != TYPE)
+        if (b.type() != type)
             throw new IncompatibleTypesException();
 
+        Polynomial bPol = new Polynomial(b.entries());
+
         int min, max;
-        ArrayList<RingNumber> m, M;
-        ArrayList<RingNumber> sum = new ArrayList<RingNumber>();
+        ArrayList<Multipliable> m, M;
+        ArrayList<Multipliable> sum = new ArrayList<>();
 
-
-        if (degree == -1 && degree == polynomial.degree) {
+        if (dgr == -1 && dgr == bPol.dgr) {
 
             return new Polynomial(this.coefficients);
 
-        } else if (degree <= polynomial.degree) {
+        } else if (dgr <= bPol.dgr) {
 
-            min = degree;
+            min = dgr;
             m = coefficients;
 
-            max = polynomial.degree;
-            M = polynomial.coefficients;
+            max = bPol.dgr;
+            M = bPol.coefficients;
 
         } else {
 
-            min = polynomial.degree;
-            m = polynomial.coefficients;
+            min = bPol.dgr;
+            m = bPol.coefficients;
 
-            max = degree;
+            max = dgr;
             M = coefficients;
 
         }
@@ -137,40 +122,108 @@ public class Polynomial<T extends RingNumber> {
 
     }
 
+    @Override
+    public Polynomial plus(ArrayList<CompoundSummable<Multipliable>> l) {
 
-    public Polynomial minus(Polynomial polynomial) {
+        Polynomial sum = this;
 
-        return plus(polynomial.negative());
+        for (CompoundSummable<Multipliable> b : l)
+            sum = sum.plus(b);
+
+        return sum;
 
     }
 
+    @Override
+    public Polynomial zero() {
 
-    public Polynomial times(Polynomial polynomial) {
+        ArrayList<Multipliable> zero = new ArrayList<>();
+        zero.add(coefficients.get(0).zero());
+        return new Polynomial(zero);
 
-        if (this.TYPE != polynomial.TYPE)
+    }
+
+    @Override
+    public boolean isZero() {
+
+        boolean isZero = true;
+
+        for (Multipliable num : coefficients)
+            if (!num.isZero()) {
+                isZero = false;
+                break;
+            }
+
+        return isZero;
+
+    }
+
+    @Override
+    public Polynomial negative() {
+
+        ArrayList<Multipliable> neg = new ArrayList<>();
+
+        for (Multipliable num : coefficients)
+            neg.add(num.negative());
+
+        return new Polynomial(neg);
+
+    }
+
+    @Override
+    public Polynomial minus(CompoundSubtractable<Multipliable> b) {
+
+        return plus(b.negative());
+
+    }
+
+    @Override
+    public Polynomial times(int n) {
+
+        ArrayList<Multipliable> prod = new ArrayList<>();
+
+        for (Multipliable num : coefficients)
+            prod.add(num.times(n));
+
+        return new Polynomial(prod);
+
+    }
+
+    @Override
+    public Polynomial times(CompoundMultipliable<Multipliable> b) {
+
+        if (b.compound_type() != compound_type())
+            throw new IncompatibleCompoundTypesException();
+
+        if (b.type() != type)
             throw new IncompatibleTypesException();
 
+        Polynomial bPol = new Polynomial(b.entries());
 
-        if (degree == -1)
+        if (dgr == -1) {
+
             return new Polynomial(coefficients);
-        else if (polynomial.degree == -1)
-            return new Polynomial(polynomial.coefficients);
 
+        } else if (bPol.dgr == -1) {
 
-        ArrayList<RingNumber> prod = new ArrayList<RingNumber>();
+            return new Polynomial(bPol.coefficients);
+        
+        }
+
+        ArrayList<Multipliable> prod = new ArrayList<>();
 
         int i, j;
-        for(i = 0; i <= degree; i++) {
+        for(i = 0; i <= dgr; i++) {
 
-            for (j = 0; j <= polynomial.degree; j++) {
+            for (j = 0; j <= bPol.dgr; j++) {
 
                 if (i + j >= prod.size()) {
 
-                    prod.add(coefficients.get(i).times(polynomial.coefficients.get(j)));
+                    prod.add(coefficients.get(i).times(bPol.coefficients.get(j)));
 
                 } else {
 
-                    prod.set(i + j, prod.get(i + j).plus(coefficients.get(i).times(polynomial.coefficients.get(j))));
+                    prod.set(i + j, prod.get(i + j).plus(coefficients.get(i).times(bPol.coefficients.get(j))));
 
                 }
 
@@ -182,13 +235,72 @@ public class Polynomial<T extends RingNumber> {
 
     }
 
+    @Override
+    public Polynomial times(ArrayList<CompoundMultipliable<Multipliable>> l) {
 
+        Polynomial prod = this;
+
+        for (CompoundMultipliable<Multipliable> b : l)
+            prod = prod.times(b);
+
+        return prod;
+
+    }
+
+    @Override
+    public Polynomial action(Multipliable b) {
+
+        ArrayList<Multipliable> prod = new ArrayList<>();
+
+        for (Multipliable num : coefficients)
+            prod.add(num.times(b));
+
+        return new Polynomial(prod);
+
+    }
+
+    @Override
+    public TYPE type() {
+
+        return type;
+
+    }
+
+    @Override
+    public Integer A() {
+
+        return dgr;
+
+    }
+
+    @Override
+    public Integer B() {
+
+        return 0;
+
+    }
+
+    @Override
+    public COMPOUND_TYPE compound_type() {
+
+        return COMPOUND_TYPE.POLYNOMIAL;
+
+    }
+
+    @Override
+    public ArrayList<Multipliable> entries() {
+
+        return coefficients;
+
+    }
+
+    @Override
     public String format() {
 
         String str = "";
 
         int i;
-        for (i = 0; i < coefficients.size(); i++) {
+        for (i = 0; i <= dgr; i++) {
 
             str += coefficients.get(i).format();
             str += (i == 0) ? "" : "X^" + i;
@@ -198,60 +310,5 @@ public class Polynomial<T extends RingNumber> {
         return str;
 
     }
-
-
-    public void print() {
-
-        System.out.println(format());
-
-    }
-
-
-    public static Polynomial sum(Polynomial polynomial1, Polynomial polynomial2) {
-
-        return polynomial1.plus(polynomial2);
-
-    }
-
-
-    public static Polynomial sum(ArrayList<Polynomial> polynomials) {
-
-        if (polynomials.size() == 0)
-            throw new EmptyArrayException();
-
-        Iterator<Polynomial> it = polynomials.iterator();
-
-        Polynomial sum = it.next();
-
-        while (it.hasNext())
-            sum = sum.plus(it.next());
-
-        return sum;
-
-    }
-
-    public static Polynomial mult(Polynomial polynomial1, Polynomial polynomial2) {
-
-        return polynomial1.times(polynomial2);
-
-    }
-
-
-    public static Polynomial mult(ArrayList<Polynomial> polynomials) {
-
-        if (polynomials.size() == 0)
-            throw new EmptyArrayException();
-
-        Iterator<Polynomial> it = polynomials.iterator();
-
-        Polynomial mult = it.next();
-
-        while (it.hasNext())
-            mult = mult.times(it.next());
-
-        return mult;
-
-    }
-
     
 }
