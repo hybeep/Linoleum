@@ -88,7 +88,6 @@ public class Zp extends DivisionRingNumber {
     public Zp plus(ArrayList<Summable> l) {
 
         Zp sum = this;
-
         for (Summable num : l)
             sum = sum.plus(num);
 
@@ -131,7 +130,6 @@ public class Zp extends DivisionRingNumber {
     public Zp times(ArrayList<Multipliable> l) {
 
         Zp prod = this;
-
         for (Multipliable num : l)
             prod = prod.times(num);
 
@@ -160,42 +158,51 @@ public class Zp extends DivisionRingNumber {
 
     @Override
     public Zp pow(int n) {
+
+        if (isZero())
+            if (n > 0)
+                return zero();
+            else
+                throw new DivideByZeroException();
+
+        if (n == 0 || isIdentity())
+            return identity();
+
+        Zp pow;
         
         Zp s;
-
-        if (isZero()) {
-
-            return zero();
-
-        } else if (n == 0) {
-
-            s = identity();
-
-        } else if (n < 0) {
-
-            s = inverse();
-            n = -n;
-
-        } else {
+        if (n > 0) {
 
             s = this;
 
+        } else {
+
+            s = this.inverse();
+            n = -n;
+
         }
 
-        Zp power = s;
+        pow = s;
 
         int i;
         for (i = 1; i < n; i++)
-            power = power.times(s);
+            pow = pow.times(s);
 
-        return power;
-        
+        return pow;
+
     }
 
     @Override
     public boolean isZero() {
 
         return Long.compare(A, zero) == 0;
+
+    }
+
+    @Override
+    public boolean isIdentity() {
+
+        return Long.compare(A, one) == 0;
 
     }
 

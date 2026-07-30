@@ -29,5 +29,6 @@ public interface Identity extends Multipliable {
     Identity times(ArrayList<Multipliable> l);
 
     Identity identity();
+    boolean isIdentity();
 
 }

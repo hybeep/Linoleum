@@ -11,6 +11,9 @@ final public class Zn extends IdentityRingNumber {
 
     public Zn(Long Z, Long N) {
 
+        if (N == 0)
+            throw new TrivialModulo();
+
         this.A = Z;
         this.B = N > 0L ? N : -N;
         reduce();
@@ -71,7 +74,6 @@ final public class Zn extends IdentityRingNumber {
     public Zn plus(ArrayList<Summable> l) {
 
         Zn sum = this;
-
         for (Summable num : l)
             sum = sum.plus(num);
 
@@ -114,7 +116,6 @@ final public class Zn extends IdentityRingNumber {
     public Zn times(ArrayList<Multipliable> l) {
 
         Zn prod = this;
-
         for (Multipliable num : l)
             prod = prod.times(num);
 
@@ -126,6 +127,13 @@ final public class Zn extends IdentityRingNumber {
     public boolean isZero() {
 
         return Long.compare(A, zero) == 0;
+
+    }
+
+    @Override
+    public boolean isIdentity() {
+
+        return Long.compare(A, one) == 0;
 
     }
 

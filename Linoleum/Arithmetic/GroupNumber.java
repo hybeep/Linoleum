@@ -8,7 +8,15 @@ public abstract class GroupNumber implements Subtractable {
     public abstract GroupNumber plus(Summable b);
 
     @Override
-    public abstract GroupNumber plus(ArrayList<Summable> b);
+    public GroupNumber plus(ArrayList<Summable> l) {
+
+        GroupNumber sum = this;
+        for (Summable num : l)
+            sum = sum.plus(num);
+
+        return sum;
+
+    }
 
     @Override
     public abstract GroupNumber zero();
@@ -17,10 +25,41 @@ public abstract class GroupNumber implements Subtractable {
     public abstract GroupNumber negative();
 
     @Override
-    public abstract GroupNumber minus(Subtractable b);
+    public GroupNumber minus(Subtractable b) {
+
+        return plus(b.negative());
+
+    }
 
     @Override
-    public abstract GroupNumber times(int n);
+    public GroupNumber times(int n) {
+
+        if (n == 0 || isZero())
+            return zero();
+
+        GroupNumber prod;
+        
+        GroupNumber s;
+        if (n > 0) {
+
+            s = this;
+
+        } else {
+
+            s = this.negative();
+            n = -n;
+
+        }
+
+        prod = s;
+
+        int i;
+        for (i = 1; i < n; i++)
+            prod = prod.plus(s);
+
+        return prod;
+
+    }
 
     @Override
     final public void print() {

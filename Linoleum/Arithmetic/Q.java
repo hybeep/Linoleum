@@ -104,7 +104,6 @@ final public class Q extends DivisionRingNumber {
     public Q plus(ArrayList<Summable> l) {
 
         Q sum = this;
-
         for (Summable num : l)
             sum = sum.plus(num);
 
@@ -155,18 +154,10 @@ final public class Q extends DivisionRingNumber {
     public Q times(ArrayList<Multipliable> l) {
 
         Q prod = this;
-
         for (Multipliable num : l)
             prod = prod.times(num);
 
         return prod;
-
-    }
-
-    @Override
-    public boolean isZero() {
-
-        return Long.compare(A, zero) == 0;
 
     }
 
@@ -187,34 +178,51 @@ final public class Q extends DivisionRingNumber {
     @Override
     public Q pow(int n) {
 
+        if (isZero())
+            if (n > 0)
+                return zero();
+            else
+                throw new DivideByZeroException();
+
+        if (n == 0 || isIdentity())
+            return identity();
+
+        Q pow;
+        
         Q s;
-
-        if (isZero()) {
-
-            return zero();
-
-        } else if (n == 0) {
-
-            s = identity();
-
-        } else if (n < 0) {
-
-            s = inverse();
-            n = -n;
-
-        } else {
+        if (n > 0) {
 
             s = this;
 
+        } else {
+
+            s = this.inverse();
+            n = -n;
+
         }
 
-        Q power = s;
+        pow = s;
 
         int i;
         for (i = 1; i < n; i++)
-            power = power.times(s);
+            pow = pow.times(s);
 
-        return power;
+        return pow;
+
+    }
+
+
+    @Override
+    public boolean isZero() {
+
+        return Long.compare(A, zero) == 0;
+
+    }
+
+    @Override
+    public boolean isIdentity() {
+
+        return Long.compare(A, one) == 0 && Long.compare(B, one) == 0;
 
     }
 

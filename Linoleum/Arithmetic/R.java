@@ -84,7 +84,6 @@ final public class R extends DivisionRingNumber {
     public R plus(ArrayList<Summable> l) {
 
         R sum = this;
-
         for (Summable num : l)
             sum = sum.plus(num);
 
@@ -138,18 +137,10 @@ final public class R extends DivisionRingNumber {
     public R times(ArrayList<Multipliable> l) {
 
         R prod = this;
-
         for (Multipliable num : l)
             prod = prod.times(num);
 
         return prod;
-
-    }
-
-    @Override
-    public boolean isZero() {
-
-        return Double.compare(A, zero) == 0;
 
     }
 
@@ -173,37 +164,52 @@ final public class R extends DivisionRingNumber {
     @Override
     public R pow(int n) {
 
+        if (isZero())
+            if (n > 0)
+                return zero();
+            else
+                throw new DivideByZeroException();
+
+        if (n == 0 || isIdentity())
+            return identity();
+
+        R pow;
+        
         R s;
-
-        if (isZero()) {
-
-            return zero();
-
-        } else if (n == 0) {
-
-            s = identity();
-
-        } else if (n < 0) {
-
-            s = inverse();
-            n = -n;
-
-        } else {
+        if (n > 0) {
 
             s = this;
 
+        } else {
+
+            s = this.inverse();
+            n = -n;
+
         }
 
-        R power = s;
+        pow = s;
 
         int i;
         for (i = 1; i < n; i++)
-            power = power.times(s);
+            pow = pow.times(s);
 
-        return power;
+        return pow;
 
     }
 
+    @Override
+    public boolean isZero() {
+
+        return Double.compare(A, zero) == 0;
+
+    }
+
+    @Override
+    public boolean isIdentity() {
+
+        return Double.compare(A, one) == 0;
+
+    }
 
     @Override
     public String format() {

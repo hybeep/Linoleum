@@ -89,10 +89,6 @@ The rest of the classes have the same methods as the 'simple' ones except for th
 
 
 ## To-Do
-* The division ring *Zp* (Z modulo a prime number).
-* Modules over a ring and Algebras: define Action of a ring on a group and on another ring.
-* Matrices and polynomials (algebras) over an indentity ring. 
-* Transform *Compound* into 'simple', so that polynomials of matrices can be created, for example.
 * Finish Expression and Derivative
 
 

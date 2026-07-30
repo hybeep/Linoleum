@@ -161,7 +161,6 @@ final public class C extends DivisionRingNumber {
     public C plus(ArrayList<Summable> l) {
 
         C sum = this;
-
         for (Summable num : l)
             sum = sum.plus(num);
 
@@ -226,18 +225,10 @@ final public class C extends DivisionRingNumber {
     public C times(ArrayList<Multipliable> l) {
 
         C prod = this;
-
         for (Multipliable num : l)
             prod = prod.times(num);
 
         return prod;
-
-    }
-
-    @Override
-    public boolean isZero() {
-
-        return Double.compare((new C(this, 1)).A, zero) == 0;
 
     }
 
@@ -265,34 +256,36 @@ final public class C extends DivisionRingNumber {
     @Override
     public C pow(int n) {
 
+        if (isZero())
+            if (n > 0)
+                return zero();
+            else
+                throw new DivideByZeroException();
+
+        if (n == 0 || isIdentity())
+            return identity();
+
+        C pow;
+        
         C s;
-
-        if (isZero()) {
-
-            return zero();
-
-        } else if (n == 0) {
-
-            s = identity();
-
-        } else if (n < 0) {
-
-            s = inverse();
-            n = -n;
-
-        } else {
+        if (n > 0) {
 
             s = this;
 
+        } else {
+
+            s = this.inverse();
+            n = -n;
+
         }
 
-        C power = s;
+        pow = s;
 
         int i;
         for (i = 1; i < n; i++)
-            power = power.times(s);
+            pow = pow.times(s);
 
-        return power;
+        return pow;
 
     }
 
@@ -321,6 +314,21 @@ final public class C extends DivisionRingNumber {
                 B -= _2PI;
 
         }
+
+    }
+
+    @Override
+    public boolean isZero() {
+
+        return Double.compare((new C(this, 1)).A, zero) == 0;
+
+    }
+
+    @Override
+    public boolean isIdentity() {
+
+        C zPair = new C(this, 0);
+        return Double.compare(zPair.A, one) == 0 && Double.compare(zPair.B, zero) == 0;
 
     }
 

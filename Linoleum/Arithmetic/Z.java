@@ -66,7 +66,6 @@ final public class Z extends IdentityRingNumber {
     public Z plus(ArrayList<Summable> l) {
 
         Z sum = this;
-
         for (Summable num : l)
             sum = sum.plus(num);
 
@@ -114,7 +113,6 @@ final public class Z extends IdentityRingNumber {
     public Z times(ArrayList<Multipliable> l) {
 
         Z prod = this;
-
         for (Multipliable num : l)
             prod = prod.times(num);
 
@@ -126,6 +124,13 @@ final public class Z extends IdentityRingNumber {
     public boolean isZero() {
 
         return Long.compare(A, zero) == 0;
+
+    }
+
+    @Override
+    public boolean isIdentity() {
+
+        return Long.compare(A, one) == 0;
 
     }
 
