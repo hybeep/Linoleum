@@ -39,7 +39,7 @@ final public class Zn extends IdentityRingNumber {
             A += B;
 
         while(B <= A)
-            A -=  B;
+            A -= B;
 
     }
 
@@ -170,6 +170,5 @@ final public class Zn extends IdentityRingNumber {
         return new ArrayList<Number>();
 
     }
-    
     
 }

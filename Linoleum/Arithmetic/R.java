@@ -175,11 +175,15 @@ final public class R extends DivisionRingNumber {
 
         R s;
 
-        if (n == 0) {
+        if (isZero()) {
+
+            return zero();
+
+        } else if (n == 0) {
 
             s = identity();
 
-        } else if (n <= 0) {
+        } else if (n < 0) {
 
             s = inverse();
             n = -n;

@@ -3,6 +3,7 @@ package Expression;
 import DataStructures.BinaryTree;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Arrays;
 import java.util.Stack;
 
@@ -10,19 +11,36 @@ import java.util.regex.Pattern;
 
 public class Expression {
 
-
 	public Expression(String expression) {
 
-		this.template = expression;
-		int n = this.template.length();
-
+		this.template = "";
 		this.constants = new ArrayList<Double>();
 
-		Stack<Character> par = new Stack<Character>();
-		
-		for (int i = 0; i < n; i++) {
+		expression = expression
+				.toLowerCase()
+				.replaceAll("asin", "" + ASIN)
+				.replaceAll("acos", "" + ACOS)
+				.replaceAll("atan", "" + ATAN)
+				.replaceAll("acot", "" + ACOT)
+				.replaceAll("asec", "" + ASEC)
+				.replaceAll("acsc", "" + ACSC)
+				.replaceAll("sin",  "" + SIN)
+				.replaceAll("cos",  "" + COS)
+				.replaceAll("tan",  "" + TAN)
+				.replaceAll("cot",  "" + COT)
+				.replaceAll("sec",  "" + SEC)
+				.replaceAll("csc",  "" + CSC)
+				.replaceAll("log",  "" + LOG)
+				.replaceAll("ln",   "" + LN);
 
-			char char_i = this.template.charAt(i);
+		int n = expression.length();
+
+		Stack<Character> par = new Stack<Character>();
+
+		int i;
+		for (i = 0; i < n; i++) {
+
+			char char_i = expression.charAt(i);
 
 			if (!LANGUAGE_CHARS.contains(char_i)) {
 
@@ -31,13 +49,20 @@ public class Expression {
 			} else if (char_i == LP) {
 
 				par.push(char_i);
+				this.template += char_i;
 
 			} else if (char_i == RP) {
 
-			 	if (par.isEmpty())
+			 	if (par.isEmpty()) {
+
 					throw new UnbalancedParenthesisException();
-				else
+
+				} else {
+
 					par.pop();
+					this.template += char_i;
+				
+				}
 			
 			} else if (NUMERIC_CHARS.contains(char_i)) {
 
@@ -311,51 +336,41 @@ public class Expression {
 	final private char y = 'y';
 	final private char z = 'z';
 
-	final private char ZERO = '0';
-	final private char ONE = '1';
-	final private char TWO = '2';
-	final private char THREE ='3';
-	final private char FOUR = '4';
-	final private char FIVE = '5';
-	final private char SIX = '6';
+	final private char ZERO  = '0';
+	final private char ONE   = '1';
+	final private char TWO   = '2';
+	final private char THREE = '3';
+	final private char FOUR  = '4';
+	final private char FIVE  = '5';
+	final private char SIX   = '6';
 	final private char SEVEN = '7';
 	final private char EIGHT = '8';
-	final private char NINE = '9';
+	final private char NINE  = '9';
 
-	final private char PLUS = '+';
+	final private char PLUS  = '+';
 	final private char MINUS = '-';
 	final private char TIMES = '*';
-	final private char DIV = '/';
-	final private char EXP = '^';
-	final private char LOG = 'L';
+	final private char DIV   = '/';
+	final private char EXP   = '^';
+	final private char LOG   = 'L';
 
-	final private char LN = 'N';
-	final private char SIN = 'S';
+	final private char LN   = 'N';
+	final private char SIN  = 'S';
 	final private char ASIN = 'A';
-	final private char COS = 'C';
+	final private char COS  = 'C';
 	final private char ACOS = 'B';
-	final private char TAN = 'T';
+	final private char TAN  = 'T';
 	final private char ATAN = 'D';
-	final private char COT = 'O';
+	final private char COT  = 'O';
 	final private char ACOT = 'F';
-	final private char SEC = 'Q';
+	final private char SEC  = 'Q';
 	final private char ASEC = 'G';
-	final private char CSC = 'R';
+	final private char CSC  = 'R';
 	final private char ACSC = 'H';
-
-	final private char U = 'U';
-	final private char E = 'E';
-	final private char PI = 'P';
-	final private char I = 'I';
-
-	final private char W = 'W';
-	final private char X = 'X';
-	final private char Y = 'Y';
-	final private char Z = 'Z';
 	
 	final private char PERIOD = '.';
-	final private char LP = '(';
-	final private char RP = ')';
+	final private char LP     = '(';
+	final private char RP     = ')';
 	
 
 	//SYMBOL LISTS
@@ -364,21 +379,21 @@ public class Expression {
 		ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE,
 		PLUS, MINUS, TIMES, DIV, EXP, LOG,
 		LN, SIN, ASIN, COS, ACOS, TAN, ATAN, COT, ACOT, SEC, ASEC, CSC, ACSC,
-		U, E, PI, I,
-		X, Y, Z, W,
 		PERIOD, LP, RP
 	};
 
-	final private Character[] lang_chars_no_vars = {ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX,
-		SEVEN, EIGHT, NINE, PLUS, MINUS, TIMES, DIV, EXP, MINUS, LOG, SIN, ASIN, COS, ACOS,
-		TAN, ATAN, COT, ACOT, SEC, ASEC, CSC, ACSC, u, E, PI, PERIOD, LP, RP};
+	final private Character[] alphabet = {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z};
 
-	final private Character[] num_chars = {ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX,
-		SEVEN, EIGHT, NINE, MINUS, PERIOD};
+	final private Character[] num_chars = {
+		ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE,
+		p, i,
+		MINUS,
+		PERIOD
+	};
 
-	final private Character[] literals = {U, E, PI};
+	final private Character[] literals = {u, e, p, i};
 
-	final private Character[] variables = {X, Y, Z, W};
+	final private Character[] variables = {x, y, z, w};
 
 	final private Character[] unary_ops = {SIN, ASIN, COS, ACOS, TAN, ATAN,
 		COT, ACOT, SEC, ASEC, CSC, ACSC};
@@ -397,6 +412,7 @@ public class Expression {
 		COT, ACOT, SEC, ASEC, CSC, ACSC};
 
 	final private ArrayList<Character> LANGUAGE_CHARS 		  = new ArrayList<Character>(Arrays.asList(lang_chars));
+	final private ArrayList<Character> ALPHABET				  = new ArrayList<>(Arrays.asList(alphabet));
 	final private ArrayList<Character> NUMERIC_CHARS 		  = new ArrayList<Character>(Arrays.asList(num_chars));
 	final private ArrayList<Character> LITERALS 			  = new ArrayList<Character>(Arrays.asList(literals));
 	final private ArrayList<Character> VARIABLES 			  = new ArrayList<Character>(Arrays.asList(variables));

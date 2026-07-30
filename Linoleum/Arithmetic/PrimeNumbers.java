@@ -12,14 +12,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-
-public class PrimeNumbers implements Serializable {
-    
+public class PrimeNumbers implements Serializable {    
 
     private TreeMap<Long, Long> primes;
     private Long next;
     private Long sqrt;
-
 
     public PrimeNumbers() {
 
@@ -30,8 +27,7 @@ public class PrimeNumbers implements Serializable {
 
     }
 
-
-    public PrimeNumbers(String filename) throws FileNotFoundException, IOException, ClassNotFoundException, FileNotFoundException{
+    public PrimeNumbers(String filename) throws FileNotFoundException, IOException, ClassNotFoundException, FileNotFoundException {
 
         if (!filename.matches(FILENAME_PATTERN))
             throw new FileNameNotValid();
@@ -46,37 +42,36 @@ public class PrimeNumbers implements Serializable {
         
     }
 
-
     private boolean testNext() {
 
         boolean isPrime = true;
 
-        while (this.sqrt * this.sqrt <= this.next)
-            this.sqrt += 1;
+        while (sqrt * sqrt <= next)
+            sqrt += 1L;
 
-        this.sqrt -= 1;
+        sqrt -= 1L;
 
-        Set<Map.Entry<Long, Long>> entries = this.primes.entrySet();
+        Set<Map.Entry<Long, Long>> entries = primes.entrySet();
         for (Map.Entry<Long, Long> entry : entries) {
 
-            Long i = entry.getKey();
+            Long k = entry.getKey();
+            Long val_k = entry.getValue();
 
-            if (i > this.sqrt)
+            if (k > sqrt)
                 break;
 
-            Long val_i = entry.getValue();
+            while (val_k < next)
+                val_k += k;
 
-            while (val_i < this.next)
-                val_i += i;
-
-            if (this.next.equals(val_i)) {
+            if (next.equals(val_k)) {
 
                 isPrime = false;
-                primes.put(i, val_i + i);
+                entry.setValue(val_k + k);
+                break;
 
             } else {
 
-                primes.put(i, val_i);
+                entry.setValue(val_k);
 
             }
 
@@ -86,27 +81,73 @@ public class PrimeNumbers implements Serializable {
 
     }
 
-
     public void searchUntil(Long limit) {
 
-        while (this.next <= limit) {
+        while (next <= limit) {
 
             if (testNext())
-                primes.put(this.next, 2 * this.next);
+                primes.put(next, next * next);
 
-            this.next += 2L;
+            next += 2L;
 
         }
 
     }
 
+    public boolean isPrime(Long n) {
 
-    public Set<Long> get() {
+        if (n < next)
+            
+            return primes.containsKey(n);
 
-        return this.primes.keySet();
+        else
+
+            throw new UnknownPrimality();
 
     }
 
+    public int getSize() {
+
+        return primes.size();
+
+    }
+
+    public Long maxPrime() {
+
+        return primes.lastKey();
+
+    }
+
+    public Long get(int n) {
+
+        if (n < 0 || n >= getSize())
+            throw new ArrayIndexOutOfBoundsException();
+
+        Set<Long> keys = primes.keySet();
+        return keys.toArray(new Long[0])[n];
+
+    }
+
+    public int indexOf(Long n) {
+
+        if (!isPrime(n))
+            throw new NotPrimeNumber();
+
+        Set<Long> keys = primes.keySet();
+        
+        int index = 0;
+        for (Long k : keys) {
+
+            if (n.equals(k))
+                break;
+
+            index += 1;
+
+        }
+
+        return index;
+
+    }
 
     public int save(String filename) throws FileNotFoundException, IOException {
         
@@ -124,8 +165,6 @@ public class PrimeNumbers implements Serializable {
 
     }
 
-
     private final String FILENAME_PATTERN = "^[a-zA-Z0-9_]+[.]{1}lpn$";
-
 
 }

@@ -4,6 +4,7 @@ public enum TYPE {
 
     INTEGER,
     MODN,
+    MODP,
     RATIONAL,
     REAL,
     COMPLEX,
