@@ -29,5 +29,6 @@ public interface CompoundIdentity<T extends Identity> extends CompoundMultipliab
     CompoundIdentity<T> times(ArrayList<CompoundMultipliable<T>> l);
 
     CompoundIdentity<T> identity();
+    boolean isIdentity();
     
 }

@@ -2,7 +2,7 @@ package Arithmetic;
 
 import java.util.ArrayList;
 
-public class Zp extends DivisionRingNumber {
+final public class Zp extends DivisionRingNumber {
 
     private Long A, B;
     private PrimeNumbers pn;

@@ -181,6 +181,21 @@ final public class IdentityRingDirectSum extends CompoundIdentityRingNumber {
     }
 
     @Override
+    public boolean isIdentity() {
+
+        boolean isOne = true;
+        
+        for (Identity num : entries)
+            if (!num.isIdentity()) {
+                isOne = false;
+                break;
+            }
+
+        return isOne;
+
+    }
+
+    @Override
     public String format() {
 
         String s = "(";
